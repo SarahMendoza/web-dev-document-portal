@@ -10,7 +10,7 @@ function App() {
       <nav>
         <ul style={{ display: "flex", gap: "1rem" }}>
           <li>
-            <Link to="/home">UserHomePage</Link>
+            <Link to="/">UserHomePage</Link>
           </li>
           <li>
             <Link to="/about">UserViewFormsPage</Link>
@@ -19,7 +19,7 @@ function App() {
       </nav>
 
       <Routes>
-        <Route path="/home" element={<UserHomePage />} />
+        <Route path="/" element={<UserHomePage />} />
         <Route path="/about" element={<UserViewFormsPage />} />
       </Routes>
     </Router>
