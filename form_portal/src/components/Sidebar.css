@@ -1,0 +1,20 @@
+/* Sidebar.css */
+.sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    left: 0;
+    top: 100px;
+    background-color: #f8f9fa; 
+    padding: 1rem;
+  }
+  
+  .sidebar h4 {
+    text-align: center;
+  }
+  
+  .main-content {
+    margin-left: 250px; 
+    padding: 1rem;
+  }
+  
