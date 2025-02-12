@@ -1,6 +1,7 @@
 import "./App.css";
 import UserHomePage from "./pages/UserHomePage.jsx";
 import UserViewFormsPage from "./pages/UserViewFormsPage.jsx";
+import Header from "./components/Header.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
@@ -8,6 +9,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 function App() {
   return (
     <Router>
+      <Header />
       <nav>
         <ul style={{ display: "flex", gap: "1rem" }}>
           <li>

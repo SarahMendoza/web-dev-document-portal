@@ -1,0 +1,18 @@
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 80px;
+    display: flex;
+    align-items: center; /* Centers items vertically */
+    padding: 0 20px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between logo and text */
+}
+
+.nav-text {
+    color: white;
+    font-size: 1.5rem;
+}

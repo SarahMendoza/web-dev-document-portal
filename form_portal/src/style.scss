@@ -1,0 +1,32 @@
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+// Override Bootstrap's variables
+$primary: #fff0f0;
+$secondary: #c18484;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #cc4e00;
+$light: #f8f9fa;
+$dark: #dfe3e8;
+
+
+$custom-colors: (
+  "header": #6c2b3f,
+  "sidebar": #c18484
+);
+
+// Merge with Bootstrap's theme-colors map
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+
+// Import Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+// Add any additional custom styles after the import
+.custom-component {
+  background: $primary;
+  color: $light;
+}
