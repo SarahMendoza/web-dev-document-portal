@@ -1,37 +1,40 @@
 .header {
-    position: fixed; /* Fix header to the top */
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* Ensures it's above other content */
+  position: fixed; /* Fix header to the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensures it's above other content */
+  background-color: #8b0000; /* Dark Red */
+  color: white; /* Sets text color */
+  padding: 0px 20px; /* Adds vertical space without forcing a fixed height */
 }
 
 .page-background {
-    background-color: #c18484;
+  background-color: #c18484;
 }
 
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 80px;
-    padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+  padding: 0 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .nav-text {
-    color: white; /* Adjust text color for visibility */
-    font-size: 1.5rem;
+  color: white; /* Adjust text color for visibility */
+  font-size: 1.5rem;
 }
 
 /* Add padding to body to prevent content from hiding under the fixed header */
 body {
-    margin: 0;
-    padding-top: 80px; /* Matches navbar height */
+  margin: 0;
+  padding-top: 80px; /* Matches navbar height */
 }

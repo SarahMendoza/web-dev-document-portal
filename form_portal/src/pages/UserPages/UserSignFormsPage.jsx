@@ -2,8 +2,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const UserViewFormsPage = () => {
+const UserSignFormsPage = () => {
   return <div>This is view forms page</div>;
 };
 
-export default UserViewFormsPage;
+export default UserSignFormsPage;
