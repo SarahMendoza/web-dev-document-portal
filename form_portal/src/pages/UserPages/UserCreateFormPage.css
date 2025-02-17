@@ -1,0 +1,17 @@
+.main-page-content-form {
+  margin-top: 100px;
+  margin-left: 300px;
+  margin-right: 300px;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+.inline-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inline-container p {
+  margin: 0;
+}

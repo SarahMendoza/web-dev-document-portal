@@ -1,7 +1,7 @@
-import UserHomePage from "../pages/UserPages/UserHomePage";
-import UserCreateFormPage from "../pages/UserPages/UserCreateFormPage";
-import UserViewFormsPage from "../pages/UserPages/UserViewFormsPage";
-import UserSignFormsPage from "../pages/UserPages/UserSignFormsPage";
+import UserHomePage from "./../../pages/UserPages/UserHomePage";
+import UserCreateFormPage from "./../../pages/UserPages/UserCreateFormPage";
+import UserViewFormsPage from "./../../pages/UserPages/UserViewFormsPage";
+import UserSignFormsPage from "./../../pages/UserPages/UserSignFormsPage";
 
 export const SidebarData = [
   {
