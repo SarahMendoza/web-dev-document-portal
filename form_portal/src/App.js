@@ -19,11 +19,6 @@ function App() {
           <Header />
           <Sidebar />
         </div>
-
-        <div className="main-page-content">
-          place a page component inside of this divider
-          <UserViewFormsPage />
-        </div>
       </div>
     </Router>
   );

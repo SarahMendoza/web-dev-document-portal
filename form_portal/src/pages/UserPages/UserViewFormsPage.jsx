@@ -1,8 +1,10 @@
 // user page to view forms
 import React from "react";
 import Table from '../../components/Table';
+import { Link } from "react-router-dom";
 
-const UserViewFormsPage = () => {
+
+function UserViewFormsPage(){
   const data = [
     { id: 1, name: 'John Doe', age: 30, city: 'New York' },
     { id: 2, name: 'Jane Smith', age: 25, city: 'Los Angeles' },
@@ -17,7 +19,7 @@ const UserViewFormsPage = () => {
   ];
 
   return (
-    <div>
+    <div className="main-page-content">
       <Table data={data} columns={columns} />
     </div>
   );
