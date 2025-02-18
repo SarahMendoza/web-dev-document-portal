@@ -10,7 +10,7 @@
   
   /* Primary Button */
   .btn-primary {
-    background-color: #c18484;
+    background-color: #c18484 !important;
     color: white;
   }
   
