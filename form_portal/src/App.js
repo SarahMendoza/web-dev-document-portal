@@ -2,7 +2,7 @@ import "./App.css";
 import UserHomePage from "./pages/UserPages/UserHomePage.jsx";
 import UserViewFormsPage from "./pages/UserPages/UserViewFormsPage.jsx";
 import Header from "./components/Header.jsx";
-import Sidebar from "./components/Sidebar.jsx";
+import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
