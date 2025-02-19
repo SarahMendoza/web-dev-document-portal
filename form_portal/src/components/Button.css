@@ -1,0 +1,40 @@
+/* components/Button.css */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Primary Button */
+  .btn-primary {
+    background-color: #c18484 !important;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #c18484;
+  }
+  
+  /* Secondary Button */
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+  
+  /* Danger Button */
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  

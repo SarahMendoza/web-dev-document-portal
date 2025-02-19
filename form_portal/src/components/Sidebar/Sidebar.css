@@ -13,7 +13,43 @@
   text-align: center;
 }
 
-.nav-item {
-  margin-left: 250px;
-  padding: 1rem;
+.nav-menu-items li {
+  padding: 15px;
+  text-align: center;
+  transition: background-color 0.3s ease-in-out;
+  list-style-type: none;
+  margin-left: -50px;
+  margin-right: -15px;
+}
+
+.nav-menu-items li a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+/* Hover Effect */
+.nav-menu-items li:hover {
+  background-color: #8b0000;
+}
+
+/* Active Button */
+.nav-menu-items .active {
+  background-color: #ff0000;
+}
+
+/* Navbar Toggle */
+.navbar-toggle {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.menu-bars {
+  font-size: 25px;
+  color: white;
+  cursor: pointer;
 }

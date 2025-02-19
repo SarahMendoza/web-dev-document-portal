@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link, Routes, Route } from "react-router-dom";
+import { Link, Routes, Route, useLocation } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
 
 //import React from "react";
 import "./Sidebar.css";
 
 const Sidebar = () => {
+  const location = useLocation(); // Get the current URL path
+
   return (
     /*
     <div className="sidebar">
@@ -44,8 +46,9 @@ const Sidebar = () => {
               <Link to="#" className="menu-bars"></Link>
             </li>
             {SidebarData.map((item, index) => {
+              const isActive = location.pathname === item.path;
               return (
-                <li key={index} className={item.cName}>
+                <li key={index} className={`nav-item ${isActive ? "active" : ""}`}>
                   <Link to={item.path}>
                     <span>{item.title}</span>
                   </Link>
