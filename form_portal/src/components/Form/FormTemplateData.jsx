@@ -1,6 +1,7 @@
 export const FormTemplateData = [
   {
     title: "Graduation",
+    formTypeId: "GR001",
     header: {
       formTypeId: "GR001",
       formTitle: "Graduation Application",
@@ -47,6 +48,7 @@ export const FormTemplateData = [
   },
   {
     title: "Transfer Courses",
+    formTypeId: "TRN001",
     header: {
       formTypeId: "TRN001",
       formTitle: "Transfer Courses Form",
@@ -88,6 +90,7 @@ export const FormTemplateData = [
   },
   {
     title: "Research Funds Approval",
+    formTypeId: "RSF001",
     header: {
       formTypeId: "RSF001",
       formTitle: "Faculty Research Funds Approval Form",

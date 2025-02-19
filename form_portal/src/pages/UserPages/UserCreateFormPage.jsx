@@ -3,7 +3,7 @@ import "./UserCreateFormPage.css";
 import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { FormTemplateData } from "../../components/Form/FormTemplateData";
+import FormTemplate from "../../components/Form/FormTemplate.jsx";
 
 const UserCreateFormPage = () => {
   //function - API stub to fetch available form types
@@ -39,6 +39,7 @@ const UserCreateFormPage = () => {
       {/* add editable table here */}
       <p>Form preview:</p>
       {/* display dynamic form component here */}
+      <FormTemplate />
       {/* add "Save Form" button */}
       {/* add "Submit" button */}
     </div>
