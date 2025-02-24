@@ -1,13 +1,14 @@
 // user page to create a new form, with save or submit options
 import React from "react";
 import Table from '../../components/Table'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button"
 import "../../components/Button.css"
 
 function UserSignFormsPage() {
+  const navigate = useNavigate();
   const handleClick = () => {
-    alert("Button clicked!");
+    navigate('/user-review-sign')
   };
 
   const data = [

@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
+import UserSignReviewPage from "./pages/UserPages/UserSignReviewPage.jsx";
 
 function App() {
   const appStyle = {
@@ -19,6 +20,9 @@ function App() {
           <Header />
           <Sidebar />
         </div>
+        <Routes>
+          <Route path="/user-review-sign" element={<UserSignReviewPage />} />
+        </Routes>
       </div>
     </Router>
   );

@@ -2,6 +2,7 @@ import UserHomePage from "../pages/UserPages/UserHomePage";
 import UserCreateFormPage from "../pages/UserPages/UserCreateFormPage";
 import UserViewFormsPage from "../pages/UserPages/UserViewFormsPage";
 import UserSignFormsPage from "../pages/UserPages/UserSignFormsPage";
+import AdminViewFormsPage from "../pages/AdminPages/AdminViewFormPage";
 
 export const SidebarData = [
   {
@@ -30,6 +31,13 @@ export const SidebarData = [
     component: UserSignFormsPage,
     user_type: "User",
     path: "/sign-forms",
+    cName: "nav-text",
+  },
+  {
+    title: "Admin View Forms",
+    component: AdminViewFormsPage,
+    user_type: "Admin",
+    path: "/admin-view-forms",
     cName: "nav-text",
   },
 ];
