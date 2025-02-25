@@ -1,9 +1,10 @@
 import React from 'react';
 import "./Table.css"
 
-function Table({ data, columns }) {
+function Table({ data, columns, caption }) {
   return (
     <table>
+      <caption style={{captionSide: 'top'}}>{caption}</caption>
       <thead>
         <tr>
           {columns.map((column) => (
