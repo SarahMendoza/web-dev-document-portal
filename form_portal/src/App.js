@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import UserSignReviewPage from "./pages/UserPages/UserSignReviewPage.jsx";
+import UserSignFormsPage from "./pages/UserPages/UserSignFormsPage.jsx";
 
 function App() {
   const appStyle = {
@@ -22,6 +23,7 @@ function App() {
         </div>
         <Routes>
           <Route path="/user-review-sign" element={<UserSignReviewPage />} />
+          <Route path="/user-sign-forms" element={<UserSignFormsPage />} />
         </Routes>
       </div>
     </Router>

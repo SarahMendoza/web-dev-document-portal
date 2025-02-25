@@ -34,12 +34,12 @@
 
 /* Hover Effect */
 .nav-menu-items li:hover {
-  background-color: #8b0000;
+  background-color: #ff0000;
 }
 
 /* Active Button */
 .nav-menu-items .active {
-  background-color: #ff0000;
+  background-color: #8b0000;
 }
 
 /* Navbar Toggle */
