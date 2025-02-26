@@ -48,7 +48,6 @@ const AdminHomePage = () => {
           onClick={() => navigate("/set-password")}
         />
         <br /> <br />
-        <Button text="Log Out" onClick={logOut} /> <br /> <br />
         <Button text="Log Out" onClick={logOut} />
       </div>
     </div>
