@@ -65,9 +65,9 @@ function UserSignReviewPage() {
       </div>
       <div style={{ alignSelf: 'center', marginRight: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p>Signature</p>
-        <Button text="Sign" onClick={handleClick} variant="primary"/>
+        <Button text="Sign" onClick={goBack} variant="primary"/>
         <br></br>
-        <Button text="Reject" onClick={handleClick} variant="secondary"/>
+        <Button text="Reject" onClick={goBack} variant="secondary"/>
       </div>
     </div>
   );
