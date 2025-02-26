@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-//import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import userData from "./UserData";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  //const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     const user = userData.find((user) => user.username === username);
     if (user && user.password === password) {
-      //history.push("/user-home");
+      if (user.isAdmin) {
+        //navigate("/admin-home");
+      } else {
+        navigate("/user-home");
+      }
     } else {
       setError("Incorrect username or password");
     }
