@@ -1,19 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import userData from "./UserData";
+import UserContext from "./../../context/AuthContext.jsx";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user, login, logout } = useContext(UserContext);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const user = userData.find((user) => user.username === username);
-    if (user && user.password === password) {
-      if (user.isAdmin) {
-        //navigate("/admin-home");
+    const user_info = userData.find(
+      (user_info) => user_info.username === username
+    );
+    if (user_info && user_info.password === password) {
+      login({
+        username: user_info.username,
+        userLevel: user_info.level,
+        isAdmin: user_info.isAdmin,
+      });
+      if (user_info.isAdmin === 1) {
+        // navigate("/admin-home");
+        navigate("/user-sign-forms");
       } else {
         navigate("/user-home");
       }

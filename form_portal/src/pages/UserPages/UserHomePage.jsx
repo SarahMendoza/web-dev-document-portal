@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./UserHomePage.css";
+import UserContext from "./../../context/AuthContext.jsx";
 
 const UserHomePage = () => {
+  const { user, login, logout } = useContext(UserContext);
   return (
     <div>
       <div className="about-container">
+        <p>
+          User info: {user.username} and {user.userLevel} and {user.isAdmin}
+        </p>
         <h1>About Us</h1>
         <p>
-          This will eventually be the User Home Page! For now it is a landing page
-          or "about page" while we sort out the navigation and basic components.
+          This will eventually be the User Home Page! For now it is a landing
+          page or "about page" while we sort out the navigation and basic
+          components.
         </p>
         <p>
           We can also use this page to test components while putting them
