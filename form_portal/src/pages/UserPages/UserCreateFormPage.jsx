@@ -7,7 +7,7 @@ import FormTemplate from "../../components/Form/FormTemplate.jsx";
 import { use } from "react";
 
 const UserCreateFormPage = () => {
-  const [formTypes, setFormTypes] = useState([]);
+  const [formTypes, setFormTypes] = useState([{}]);
   const [formContents, setFormContents] = useState([]);
   const [currentType, setCurrentType] = useState("Dropdown button");
 
@@ -23,9 +23,9 @@ const UserCreateFormPage = () => {
     return;
   };
 
-  const handleTypeSelect = (e) => {
-    console.log(e.target.value);
-    setCurrentType(e.target.value);
+  const handleTypeSelect = (eventKey) => {
+    console.log(eventKey);
+    setCurrentType(eventKey);
   };
 
   //function - API stub to fetch needed form contents (or, store this from the form type call)
@@ -40,7 +40,9 @@ const UserCreateFormPage = () => {
   return (
     <div className="main-page-content">
       <h2>Create Form</h2>
-      <p>{currentType}</p>
+      <p>
+        {currentType} and {currentType.id} and {currentType.name}
+      </p>
       <p>
         Fill out a new digital form by selecting from the options below. Make
         sure to add your required signees and complete all form contents.
@@ -51,15 +53,14 @@ const UserCreateFormPage = () => {
           <DropdownButton
             id="dropdown-basic-button"
             title={currentType}
-            value={currentType}
-            onChange={handleTypeSelect}
+            onSelect={handleTypeSelect}
           >
             {
               /*  This maps each array item to a div adds
                 the style declared above and return it */
               formTypes.map((item, index) => (
-                <Dropdown.Item key={index}>
-                  {item.name} -- {index}
+                <Dropdown.Item eventKey={item} key={index}>
+                  {item.name} -- {item.id}
                 </Dropdown.Item>
               ))
             }

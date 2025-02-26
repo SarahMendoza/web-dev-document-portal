@@ -2,33 +2,60 @@ import React, { useState, useEffect } from "react";
 import { FormTemplateData } from "./FormTemplateData";
 import Table from "../Table";
 
-const FormTemplate = (formTypeId) => {
-  const [filteredForms, setFilteredForms] = useState([]);
+const FormTemplate = ({ formTypeId }) => {
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
-    // Filter the array to get only the matching form
-    const selectedForms = FormTemplateData.filter(
+    const data = FormTemplateData.find(
       (form) => form.formTypeId === formTypeId
     );
-    setFilteredForms(selectedForms);
+    setFormData(data);
   }, [formTypeId]);
 
-  // Check if the filteredForms array is empty before rendering
-  if (filteredForms.length === 0) {
-    return <p>Form not found</p>;
+  if (!formData) {
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="form-template-content">
-      FORM PREVIEW
-      <div className="form-template-header">Header</div>
-      <div className="form-template-applicantInfo">Applicant Info </div>
-      <div className="form-template-formContent">content</div>
+      <div className="form-template-header">
+        <h1>{formData.header.formTitle}</h1>
+        <p>{formData.header.formDescr}</p>
+      </div>
+      <div className="form-template-applicantInfo">
+        <input
+          type="text"
+          placeholder="First Name"
+          value={formData.applicantInfo.applicantFirstName}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={formData.applicantInfo.applicantLastName}
+        />
+      </div>
+      <div className="form-template-formContent">
+        <input
+          type="text"
+          placeholder="First Name"
+          value={formData.formContent.firstName}
+        />
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={formData.formContent.lastName}
+        />
+      </div>
       <Table
-        data={FormTemplateData.formType.formContent}
-        columns={FormTemplateData.formType.formContent.keys}
+        data={formData.formContent}
+        columns={Object.keys(formData.formContent)}
       />
-      <div className="form-template-signatures">Signatures</div>
+      <div className="form-template-signatures"></div>
+      {Object.keys(formData.signatures.info).map((key, index) => (
+        <div key={index}>
+          <p>{formData.signatures.info[key].title}</p>
+        </div>
+      ))}
     </div>
   );
 };
