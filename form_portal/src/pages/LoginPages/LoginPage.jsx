@@ -1,21 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import userData from "./UserData";
+import UserContext from "../../GlobalUserContext";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
 
   const handleLogin = (e) => {
+
     e.preventDefault();
-    const user = userData.find((user) => user.username === username);
-    if (user && user.password === password) {
-      if (user.isAdmin) {
-        //Change to admin home
+    const user_info = userData.find(
+      (user_info) => user_info.username === username
+    );
+    if (user_info && user_info.password === password) {
+      setUser({
+        user_info
+      });
+      if (user_info.isAdmin === 1) {
+        // Change to admin home
         //!!!
         navigate("/user-home");
+        navigate("/user-sign-forms");
       } else {
         navigate("/user-home");
       }

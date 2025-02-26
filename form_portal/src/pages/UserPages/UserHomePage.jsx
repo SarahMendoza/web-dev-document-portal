@@ -1,36 +1,39 @@
+
 import React from "react";
+import {useContext} from "react";
 import "./UserHomePage.css";
+import UserContext from "../../GlobalUserContext";
+import Button from "../../components/Button.jsx";
 
 const UserHomePage = () => {
+  const { user, loading } = useContext(UserContext);
+
+  if (loading) return <p>Loading user...</p>; // Avoid rendering before data loads
+
+  if (!user) return <p>No user found</p>; // Handle null case
   return (
     <div>
       <div className="about-container">
-        <h1>About Us</h1>
+        <h1>Welcome</h1>
         <p>
-          This will eventually be the User Home Page! For now it is a landing page
-          or "about page" while we sort out the navigation and basic components.
+          Here, you can perform actions probably
         </p>
-        <p>
-          We can also use this page to test components while putting them
-          together.
-        </p>
-        <h2>Our Mission</h2>
-        <p>Explain the mission.</p>
-        <h2>Our Team</h2>
-        <div className="team-members">
-          <div className="team-member">
-            <h3>Team Member 1</h3>
-            <p>Short bio of team member 1.</p>
+        <h2>Your Account</h2>
+        <div className="profile-container">
+          <div className="profile">
+            <h3>{user.username}</h3>
+            <p><img src={user.profilePicture} alt="pfp" className="rounded-circle" width="100"/></p>
           </div>
-          <div className="team-member">
-            <h3>Team Member 2</h3>
-            <p>Short bio of team member 2.</p>
+          <div className="profile-info">
+            <h3>Name: {user.name}</h3>
+            <h3>User Level: {user.level}</h3>
+            <h3>Created on: {user.creation_date}</h3>
           </div>
-          <div className="team-member">
-            <h3>Team Member 3</h3>
-            <p>Short bio of team member 3.</p>
-          </div>
+          
         </div>
+        <br></br>
+        <Button text="Reset Password"/>
+
       </div>
     </div>
   );
