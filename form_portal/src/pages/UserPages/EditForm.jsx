@@ -1,40 +1,36 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import FormTemplate from "../../components/Form/FormTemplate";
 
-const EditForm = () => {
-  const { id } = useParams(); // Get entry ID from URL
+const EditForm = (state) => {
+  //const { id } = useParams(); // Get entry ID from URL
+  //  const formTypeID = state.formID;
+  const location = useLocation();
+  //const id = location.state?.id;
+  //const formID = location.state?.formID;
+  const { id, formID } = location.state || {};
+
+  console.log("Received:", id, formID); // Debugging output
 
   // Placeholder for entry data (fetch from API later)
-  const entry = { id, name: `Entry ${id}`, description: "Some details here..." };
+  const entry = {
+    id: 0,
+    name: `Entry`,
+    description: "Some details here...",
+  };
 
   return (
-    <div>
-      <h2>Editing Entry {entry.id}</h2>
+    <div className="main-page-content">
+      {/* <h2>Editing Entry {entry.id}</h2>
       <p>Name: {entry.name}</p>
       <p>Description: {entry.description}</p>
+      */}
+      <h2>
+        Editing Entry {id} and {formID}
+      </h2>
       <button>Save Changes</button>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      <h1>Hiiofffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
-      
-
+      <h1>Heading</h1>
+      <FormTemplate formTypeId={formID} />
     </div>
   );
 };

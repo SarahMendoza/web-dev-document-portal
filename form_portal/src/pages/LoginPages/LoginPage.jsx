@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import userData from "./UserData";
 import UserContext from "../../GlobalUserContext";
+import Button from "../../components/Button";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -41,6 +42,7 @@ const LoginPage = () => {
   return (
     <div className="main-page-content">
       <h1>Login</h1>
+      <br />
       <form onSubmit={handleLogin}>
         <div>
           <label>Username:</label>
@@ -58,7 +60,8 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <br />
+        <Button text="Login" onClick={handleLogin} />
       </form>
       {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
