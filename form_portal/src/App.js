@@ -5,12 +5,19 @@ import Header from "./components/Header.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { BrowserRouter as Router, Route, Link, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { useState } from "react";
 import UserSignReviewPage from "./pages/UserPages/UserSignReviewPage.jsx";
 import UserSignFormsPage from "./pages/UserPages/UserSignFormsPage.jsx";
 import EditForm from "./pages/UserPages/EditForm.jsx";
 import LoginPage from "./pages/LoginPages/LoginPage.jsx";
+import SetPasswordPage from "./pages/LoginPages/SetPasswordPage.jsx";
 
 function App() {
   return (
@@ -42,29 +49,27 @@ const MainLayout = () => {
   //   setUser({ username: "", userLevel: -1, isAdmin: 0 });
   // };
 
-
   const location = useLocation();
   // Paths where the sidebar is hidden
   const hideSidebarPaths = ["/"];
   const shouldShowSidebar = !hideSidebarPaths.includes(location.pathname);
   console.log(location.pathname);
   return (
-
-        <div style={appStyle}>
-        <div className="d-flex flex-column bd-highlight mb-3">
-          <Header />
-          {shouldShowSidebar && <Sidebar />}
-        </div>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/user-review-sign" element={<UserSignReviewPage />} />
-          <Route path="/user-sign-forms" element={<UserSignFormsPage />} />
-          <Route path="/editform/:id" element={<EditForm />} />
-          <Route path="/login" element={<LoginPage />} />
-      </Routes>
+    <div style={appStyle}>
+      <div className="d-flex flex-column bd-highlight mb-3">
+        <Header />
+        {shouldShowSidebar && <Sidebar />}
       </div>
-
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/user-review-sign" element={<UserSignReviewPage />} />
+        <Route path="/user-sign-forms" element={<UserSignFormsPage />} />
+        <Route path="/editform/:id" element={<EditForm />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/set-password" element={<SetPasswordPage />} />
+      </Routes>
+    </div>
   );
-}
+};
 
 export default App;

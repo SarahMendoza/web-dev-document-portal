@@ -11,14 +11,13 @@ const LoginPage = () => {
   const { user, setUser } = useContext(UserContext);
 
   const handleLogin = (e) => {
-
     e.preventDefault();
     const user_info = userData.find(
       (user_info) => user_info.username === username
     );
     if (user_info && user_info.password === password) {
       setUser({
-        user_info
+        user_info,
       });
       if (user_info.isAdmin === 1) {
         // Change to admin home
@@ -29,6 +28,11 @@ const LoginPage = () => {
         navigate("/user-home");
       }
       localStorage.setItem("userType", user_info.isAdmin);
+      localStorage.setItem("userLevel", user_info.level);
+      localStorage.setItem("username", user_info.username);
+      localStorage.setItem("userPassword", user_info.password);
+      localStorage.setItem("creationDate", user_info.creation_date);
+      localStorage.setItem("userFullName", user_info.name);
     } else {
       setError("Incorrect username or password");
     }
