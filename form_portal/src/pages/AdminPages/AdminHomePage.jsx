@@ -1,11 +1,11 @@
 
 import React from "react";
 import {useContext} from "react";
-import "./UserHomePage.css";
+import "./AdminHomePage.css";
 import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button.jsx";
 
-const UserHomePage = () => {
+const AdminHomePage = () => {
   const { user, loading } = useContext(UserContext);
 
   if (loading) return <p>Loading user...</p>; 
@@ -14,7 +14,7 @@ const UserHomePage = () => {
   return (
     <div className="main-page-content">
       <div className="about-container">
-        <h1>Welcome USER</h1>
+        <h1>Welcome ADMIN</h1>
         <p>
           Here, you can perform actions probably
         </p>
@@ -39,4 +39,4 @@ const UserHomePage = () => {
   );
 };
 
-export default UserHomePage;
+export default AdminHomePage;

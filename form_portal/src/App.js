@@ -57,7 +57,6 @@ const MainLayout = () => {
         </div>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/user-home" element={<UserHomePage />} />
           <Route path="/user-review-sign" element={<UserSignReviewPage />} />
           <Route path="/user-sign-forms" element={<UserSignFormsPage />} />
           <Route path="/editform/:id" element={<EditForm />} />

@@ -23,8 +23,8 @@ const LoginPage = () => {
       if (user_info.isAdmin === 1) {
         // Change to admin home
         //!!!
-        navigate("/user-home");
-        navigate("/user-sign-forms");
+        navigate("/admin-home");
+        //navigate("/user-sign-forms");
       } else {
         navigate("/user-home");
       }

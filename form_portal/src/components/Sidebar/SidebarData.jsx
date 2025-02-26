@@ -3,6 +3,7 @@ import UserCreateFormPage from "../../pages/UserPages/UserCreateFormPage";
 import UserViewFormsPage from "../../pages/UserPages/UserViewFormsPage";
 import UserSignFormsPage from "../../pages/UserPages/UserSignFormsPage";
 import AdminViewFormsPage from "../../pages/AdminPages/AdminViewFormPage";
+import AdminHomePage from "../../pages/AdminPages/AdminHomePage";
 
 export const SidebarData = [
   {
@@ -14,7 +15,7 @@ export const SidebarData = [
   },
   {
     title: "Create Form",
-    component: UserCreateFormPage,
+    component: UserCreateFormPage,  
     user_type: "User",
     path: "/create-forms",
     cName: "nav-text",
@@ -38,9 +39,9 @@ export const SidebarData = [
 export const AdminSidebarData = [
   {
     title: "Home",
-    component: UserHomePage,
-    user_type: "User",
-    path: "/user-home",
+    component: AdminHomePage,
+    user_type: "Admin",
+    path: "/admin-home",
     cName: "nav-text",
   },
   {
