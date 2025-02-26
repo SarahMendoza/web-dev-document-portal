@@ -1,5 +1,4 @@
 import "./App.css";
-import UserContext from "./context/AuthContext.jsx";
 import UserHomePage from "./pages/UserPages/UserHomePage.jsx";
 import UserViewFormsPage from "./pages/UserPages/UserViewFormsPage.jsx";
 import Header from "./components/Header.jsx";
@@ -27,21 +26,21 @@ const MainLayout = () => {
     minHeight: "100vh",
   };
 
-  const [user, setUser] = useState({
-    username: "",
-    userLevel: -1,
-    isAdmin: -1,
-  });
+  // const [user, setUser] = useState({
+  //   username: "",
+  //   userLevel: -1,
+  //   isAdmin: -1,
+  // });
 
-  const login = (userData) => {
-    console.log("Logging in...");
-    console.log(userData);
-    setUser(userData);
-  };
+  // const login = (userData) => {
+  //   console.log("Logging in...");
+  //   console.log(userData);
+  //   setUser(userData);
+  // };
 
-  const logout = () => {
-    setUser({ username: "", userLevel: -1, isAdmin: 0 });
-  };
+  // const logout = () => {
+  //   setUser({ username: "", userLevel: -1, isAdmin: 0 });
+  // };
 
 
   const location = useLocation();
@@ -50,7 +49,7 @@ const MainLayout = () => {
   const shouldShowSidebar = !hideSidebarPaths.includes(location.pathname);
   console.log(location.pathname);
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+
         <div style={appStyle}>
         <div className="d-flex flex-column bd-highlight mb-3">
           <Header />
@@ -65,7 +64,7 @@ const MainLayout = () => {
           <Route path="/login" element={<LoginPage />} />
       </Routes>
       </div>
-      </UserContext.Provider>
+
   );
 }
 

@@ -8,11 +8,11 @@ import Button from "../../components/Button.jsx";
 const UserHomePage = () => {
   const { user, loading } = useContext(UserContext);
 
-  if (loading) return <p>Loading user...</p>; // Avoid rendering before data loads
+  if (loading) return <p>Loading user...</p>; 
 
   if (!user) return <p>No user found</p>; // Handle null case
   return (
-    <div>
+    <div className="main-page-content">
       <div className="about-container">
         <h1>Welcome</h1>
         <p>
