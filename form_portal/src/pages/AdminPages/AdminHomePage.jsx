@@ -1,12 +1,19 @@
 
 import React from "react";
 import {useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import "./AdminHomePage.css";
 import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button.jsx";
 
 const AdminHomePage = () => {
   const { user, loading } = useContext(UserContext);
+
+  const logOut = (e) => {
+    localStorage.clear();
+    navigate("/");
+  };
+  const navigate = useNavigate();
 
   if (loading) return <p>Loading user...</p>; 
 
@@ -29,11 +36,12 @@ const AdminHomePage = () => {
             <h3>User Level: {user.level}</h3>
             <h3>Created on: {user.creation_date}</h3>
           </div>
-          
+          n
         </div>
         <br></br>
         <Button text="Reset Password"/>
-
+        <br /> <br />
+        <Button text="Log Out" onClick={logOut} />
       </div>
     </div>
   );

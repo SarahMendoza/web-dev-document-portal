@@ -7,11 +7,13 @@ import TextInput from "../../components/Search/TextInput";
 import DropdownInput from "../../components/Search/DropdownInput";
 import Button from "../../components/Button"
 import "../../components/Button.css"
+import SearchComponent from "../../components/Search/SearchButton";
 
 
 function AdminCreateUserPage(){
     const navigate = useNavigate();
-    const handleClick = () => {
+    const handleClick = async (searchCriteria) => {
+        console.log(searchCriteria);
         alert('Button clicked!');
         navigate('/admin-manage-users')
     };
@@ -31,19 +33,21 @@ function AdminCreateUserPage(){
         <div className="main-page-content">
             <h1>Add User</h1>
             <h4>First Name</h4>
-            <TextInput name="text" placeholder="First Name" />
-            <h4>Last Name</h4>
-            <TextInput name="text" placeholder="Last Name" />
-            <h4>User Level</h4>
-            <DropdownInput
-                name="level"
-                options={userLevels}
-                placeholder = "User Level"
-                onChange={handleChange}
-            />
-            <h4>User Email</h4>
-            <TextInput name="text" placeholder="User Email" />
-            <Button text="Submit" onClick={handleClick} variant="primary"/>
+            <SearchComponent onSearch={handleClick}>
+                <TextInput name="text" placeholder="First Name" />
+                <h4>Last Name</h4>
+                <TextInput name="text" placeholder="Last Name" />
+                <h4>User Level</h4>
+                <DropdownInput
+                    name="level"
+                    options={userLevels}
+                    placeholder = "User Level"
+                    onChange={handleChange}
+                />
+                <h4>User Email</h4>
+                <TextInput name="text" placeholder="User Email" />
+                <Button text="Submit" onClick={handleClick} variant="primary"/>
+            </SearchComponent>
         </div>
     );
 };
