@@ -18,6 +18,7 @@ import UserSignFormsPage from "./pages/UserPages/UserSignFormsPage.jsx";
 import EditForm from "./pages/UserPages/EditForm.jsx";
 import LoginPage from "./pages/LoginPages/LoginPage.jsx";
 import SetPasswordPage from "./pages/LoginPages/SetPasswordPage.jsx";
+import AdminCreateUserPage from "./pages/AdminPages/AdminAddUserPage.jsx";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ const MainLayout = () => {
         <Route path="/editform" element={<EditForm />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/set-password" element={<SetPasswordPage />} />
+        <Route path="/create-user" element={<AdminCreateUserPage />} />
       </Routes>
     </div>
   );
