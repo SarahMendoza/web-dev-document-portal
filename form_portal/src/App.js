@@ -17,6 +17,7 @@ import UserSignReviewPage from "./pages/UserPages/UserSignReviewPage.jsx";
 import UserSignFormsPage from "./pages/UserPages/UserSignFormsPage.jsx";
 import EditForm from "./pages/UserPages/EditForm.jsx";
 import LoginPage from "./pages/LoginPages/LoginPage.jsx";
+import UserFormPreview from "./pages/UserPages/UserFormPreview.jsx";
 import SetPasswordPage from "./pages/LoginPages/SetPasswordPage.jsx";
 import AdminCreateUserPage from "./pages/AdminPages/AdminAddUserPage.jsx";
 
@@ -69,6 +70,7 @@ const MainLayout = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/set-password" element={<SetPasswordPage />} />
         <Route path="/create-user" element={<AdminCreateUserPage />} />
+        <Route path="/preview-form" element={<UserFormPreview />} />
       </Routes>
     </div>
   );

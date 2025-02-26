@@ -95,7 +95,7 @@ function UserViewFormsPage() {
       actions: (
         <button
           onClick={() =>
-            navigate("/editform", {
+            navigate("/preview-form", {
               state: { id: entry.id, formID: entry.formTypeID },
               replace: false, // Ensure state persists
             })
