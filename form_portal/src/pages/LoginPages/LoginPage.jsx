@@ -28,7 +28,7 @@ const LoginPage = () => {
       } else {
         navigate("/user-home");
       }
-      localStorage.setItem("userType", user.isAdmin);
+      localStorage.setItem("userType", user_info.isAdmin);
     } else {
       setError("Incorrect username or password");
     }
