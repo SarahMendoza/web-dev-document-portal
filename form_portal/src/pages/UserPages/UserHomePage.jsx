@@ -20,7 +20,7 @@ const UserHomePage = () => {
   return (
     <div className="main-page-content">
       <div className="about-container">
-        <h1>Welcome {localStorage.getItem("userFullName")}</h1>
+        <h1>Welcome, {localStorage.getItem("userFullName")}</h1>
         <p>Here, you can perform actions probably</p>
         <h2>Your Account</h2>
         <div className="profile-container">

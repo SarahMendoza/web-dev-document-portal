@@ -5,11 +5,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import FormTemplate from "../../components/Form/FormTemplate.jsx";
 import { use } from "react";
+import Button from "../../components/Button";
 
 const UserCreateFormPage = () => {
   const [formTypes, setFormTypes] = useState([]);
   const [formContents, setFormContents] = useState([]);
-  const [currentType, setCurrentType] = useState("UNKNOWN");
+  const [currentType, setCurrentType] = useState("PLEASE SELECT");
   const [dropDownText, setDropDownText] = useState("Dropdown button");
 
   //function - API stub to fetch available form types
@@ -41,6 +42,27 @@ const UserCreateFormPage = () => {
   }, []);
   //function - API stub for submitting form, sending data to DB backend
 
+  const handleSubmitForm = () => {
+    //submit form to DB
+
+    alert(
+      "Your form has been submitted!\n Form ID: " +
+        currentType +
+        localStorage.getItem("username") +
+        Date.now()
+    );
+  };
+
+  const handleSaveForm = () => {
+    //save
+    alert(
+      "Your form has been saved for later!\n Form ID: " +
+        currentType +
+        localStorage.getItem("username") +
+        Date.now()
+    );
+  };
+
   return (
     <div className="main-page-content">
       <h2>Create Form</h2>
@@ -66,7 +88,7 @@ const UserCreateFormPage = () => {
               ))
             }
           </DropdownButton>
-          <span>Form ID: [insert form ID from state here]</span>
+          <span>Form ID: {currentType}</span>
         </div>
       </div>
 
@@ -75,6 +97,9 @@ const UserCreateFormPage = () => {
       {/* display dynamic form component here */}
       <FormTemplate formTypeId={currentType} />
       {/* add "Save Form" button */}
+      <Button text="Save Form" onClick={handleSaveForm} />
+      <br />
+      <Button text="Submit" onClick={handleSubmitForm} />
       {/* add "Submit" button */}
     </div>
   );

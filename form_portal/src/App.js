@@ -65,7 +65,7 @@ const MainLayout = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/user-review-sign" element={<UserSignReviewPage />} />
         <Route path="/user-sign-forms" element={<UserSignFormsPage />} />
-        <Route path="/editform/:id" element={<EditForm />} />
+        <Route path="/editform" element={<EditForm />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/set-password" element={<SetPasswordPage />} />
         <Route path="/create-user" element={<AdminCreateUserPage />} />
