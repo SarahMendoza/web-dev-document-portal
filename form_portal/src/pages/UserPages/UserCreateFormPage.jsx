@@ -71,28 +71,7 @@ const UserCreateFormPage = () => {
     );
   };
 
-  const isFormComplete = () => {
-    if (!formData) return false;
-
-    // Check applicant info
-    const isApplicantInfoComplete = Object.values(formData.applicantInfo).every(
-      (val) => val.trim() !== ""
-    );
-
-    // Check form content
-    const isFormContentComplete = Object.values(
-      formData.formContent.info
-    ).every((val) => val.trim() !== "");
-
-    // Check signatures
-    const isSignaturesComplete = Object.values(formData.signatures.info).every(
-      (sig) => sig.title.trim() !== ""
-    );
-
-    return (
-      isApplicantInfoComplete && isFormContentComplete && isSignaturesComplete
-    );
-  };
+  const isFormComplete = () => {};
 
   return (
     <div className="main-page-content">

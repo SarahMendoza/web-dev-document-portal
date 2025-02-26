@@ -9,10 +9,10 @@ export const FormTemplateData = [
         "A form filled out by a student to apply for SMU graduation. It must be approved by the Department Chair, the Dean of the College, and the Registrar",
     },
     applicantInfo: {
-      formUniqueId: "",
-      applicantLevel: "",
-      applicantFirstName: "",
-      applicantLastName: "",
+      formUniqueId: "Form Unique ID",
+      applicantLevel: "Applicant Level",
+      applicantFirstName: "First Name",
+      applicantLastName: "Last Name",
     },
     formContent: {
       number: 9,
@@ -59,10 +59,10 @@ export const FormTemplateData = [
         "A form filled out by a transfer student to apply to receive SMU course credits. It must be approved by the student's Academic Advisor and the Registrar",
     },
     applicantInfo: {
-      formUniqueId: "",
-      applicantLevel: "",
-      applicantFirstName: "",
-      applicantLastName: "",
+      formUniqueId: "Form Unique ID",
+      applicantLevel: "Applicant Level",
+      applicantFirstName: "First Name",
+      applicantLastName: "Last Name",
     },
     formContent: {
       number: 8,
@@ -104,10 +104,10 @@ export const FormTemplateData = [
         "A form filled out by faculty to apply to receive SMU research funding. It must be approved by the Department Chair and the Dean of the College",
     },
     applicantInfo: {
-      formUniqueId: "",
-      applicantLevel: "",
-      applicantFirstName: "",
-      applicantLastName: "",
+      formUniqueId: "Form Unique ID",
+      applicantLevel: "Applicant Level",
+      applicantFirstName: "First Name",
+      applicantLastName: "Last Name",
     },
     formContent: {
       number: 7,

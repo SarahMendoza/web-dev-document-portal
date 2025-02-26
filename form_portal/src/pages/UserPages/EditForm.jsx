@@ -26,12 +26,8 @@ const EditForm = (state) => {
 
   return (
     <div className="main-page-content">
-      <p>Edit or submit your created form</p>
-      {/* <h2>Editing Entry {entry.id}</h2>
-      <p>Name: {entry.name}</p>
-      <p>Description: {entry.description}</p>
-      */}
       <h1>Edit Form: {entry.name} </h1>
+      <p>Edit or submit your created form</p>
       <FormTemplate formTypeId={formID} />
       <div
         style={{
