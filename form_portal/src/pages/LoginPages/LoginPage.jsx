@@ -13,10 +13,13 @@ const LoginPage = () => {
     const user = userData.find((user) => user.username === username);
     if (user && user.password === password) {
       if (user.isAdmin) {
-        //navigate("/admin-home");
+        //Change to admin home
+        //!!!
+        navigate("/user-home");
       } else {
         navigate("/user-home");
       }
+      localStorage.setItem("userType", user.isAdmin);
     } else {
       setError("Incorrect username or password");
     }

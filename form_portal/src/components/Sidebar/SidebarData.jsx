@@ -33,6 +33,16 @@ export const SidebarData = [
     path: "/sign-forms",
     cName: "nav-text",
   },
+];
+
+export const AdminSidebarData = [
+  {
+    title: "Home",
+    component: UserHomePage,
+    user_type: "User",
+    path: "/user-home",
+    cName: "nav-text",
+  },
   {
     title: "Admin View Forms",
     component: AdminViewFormsPage,
@@ -40,4 +50,4 @@ export const SidebarData = [
     path: "/admin-view-forms",
     cName: "nav-text",
   },
-];
+]
