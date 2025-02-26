@@ -1,15 +1,44 @@
 // user page to create a new form, with save or submit options
 import "./UserCreateFormPage.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import FormTemplate from "../../components/Form/FormTemplate.jsx";
+import { use } from "react";
 
 const UserCreateFormPage = () => {
+  const [formTypes, setFormTypes] = useState([]);
+  const [formContents, setFormContents] = useState([]);
+  const [currentType, setCurrentType] = useState("UNKNOWN");
+  const [dropDownText, setDropDownText] = useState("Dropdown button");
+
   //function - API stub to fetch available form types
+  const getFormTypes = () => {
+    //fetch form types from DB
+    const form_types = [
+      { name: "Graduation", id: "GR001" },
+      { name: "Credit Petition", id: "TRN001" },
+      { name: "Research Funds Approval", id: "RSF001" },
+    ];
+    setFormTypes(form_types);
+    return;
+  };
+
+  const handleTypeSelect = (eventKey) => {
+    console.log(formTypes);
+    let id_val = formTypes[eventKey].id;
+    console.log(id_val);
+    setCurrentType(id_val);
+    setDropDownText(formTypes[eventKey].name);
+  };
 
   //function - API stub to fetch needed form contents (or, store this from the form type call)
-
+  const getFormContents = (formTypeId) => {
+    //fetch form contents from DB
+  };
+  useEffect(() => {
+    getFormTypes();
+  }, []);
   //function - API stub for submitting form, sending data to DB backend
 
   return (
@@ -22,24 +51,29 @@ const UserCreateFormPage = () => {
       <div>
         <p>Select form type:</p>
         <div className="inline-container">
-          <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={dropDownText}
+            onSelect={handleTypeSelect}
+          >
+            {
+              /*  This maps each array item to a div adds
+                the style declared above and return it */
+              formTypes.map((item, index) => (
+                <Dropdown.Item eventKey={index} key={index}>
+                  {item.name} -- {item.id}
+                </Dropdown.Item>
+              ))
+            }
           </DropdownButton>
           <span>Form ID: [insert form ID from state here]</span>
         </div>
       </div>
 
       <p></p>
-      {/* add dropdown here (bootstrap + styling) */}
-      <p>Add signees by name and position: </p>
-      {/* add dropdown here (bootstrap + styling) */}
-      <p>Form contents: </p>
-      {/* add editable table here */}
       <p>Form preview:</p>
       {/* display dynamic form component here */}
-      <FormTemplate />
+      <FormTemplate formTypeId={currentType} />
       {/* add "Save Form" button */}
       {/* add "Submit" button */}
     </div>
