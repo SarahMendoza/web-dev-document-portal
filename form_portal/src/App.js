@@ -9,11 +9,12 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import UserSignReviewPage from "./pages/UserPages/UserSignReviewPage.jsx";
 import UserSignFormsPage from "./pages/UserPages/UserSignFormsPage.jsx";
 import EditForm from "./pages/UserPages/EditForm.jsx";
+import LoginPage from "./pages/LoginPages/LoginPage.jsx";
 
 function App() {
   const appStyle = {
-    backgroundColor: "#fff0f0", 
-    minHeight: "100vh", 
+    backgroundColor: "#fff0f0",
+    minHeight: "100vh",
   };
   return (
     <Router>
@@ -23,10 +24,11 @@ function App() {
           <Sidebar />
         </div>
         <Routes>
-          <Route path="/" element={<UserHomePage/>}/>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/user-home" element={<UserHomePage />} />
           <Route path="/user-review-sign" element={<UserSignReviewPage />} />
           <Route path="/user-sign-forms" element={<UserSignFormsPage />} />
-          <Route path="/editform/:id" element={<EditForm/>}/>
+          <Route path="/editform/:id" element={<EditForm />} />
         </Routes>
       </div>
     </Router>
