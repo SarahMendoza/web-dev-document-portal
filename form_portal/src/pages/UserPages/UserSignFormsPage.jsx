@@ -1,12 +1,14 @@
 // user page to create a new form, with save or submit options
 import React from "react";
 import Table from '../../components/Table'
-import { Link, useNavigate } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Button"
 import "../../components/Button.css"
 import SearchComponent from "../../components/Search/SearchButton";
 import TextInput from "../../components/Search/TextInput";
 import DropdownInput from "../../components/Search/DropdownInput";
+import FormDisplay from "../../components/FormDisplay";
+import FormContents from "../../FormContents.jsx"
 
 function UserSignFormsPage() {
   const navigate = useNavigate();
@@ -46,6 +48,37 @@ function UserSignFormsPage() {
     {value: "incomplete", label:"Incomplete"}
   ];
 
+  const exampleFormData = new FormContents({
+    title: "Example Form",
+    type: "EX01",
+    description: "This is an example form.",
+    content: "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
+    author: {
+      level: 0,
+      firstname: "John ",
+      lastname: "Doe"
+    },
+    fields: [
+      {
+        name: "school",
+        placeholder: "School here",
+        label: "Please enter your educational institution."
+      }
+    ],
+    // maybe make a signature object later
+    signatures: [
+      {
+        level: 3,
+        title: "Dean",
+        firstname: "Lana",
+        lastname: "Rey",
+        date: "1-1-1969",
+        signed: false
+      }
+    ]
+    
+  });
+
   return (
     <div className="main-page-content">
       <h1>View Forms</h1>
@@ -66,6 +99,7 @@ function UserSignFormsPage() {
         </SearchComponent>
       </div>
       <Table data={data} columns={columns} />
+      <FormDisplay formContents={exampleFormData}/>
     </div>
   );
 };

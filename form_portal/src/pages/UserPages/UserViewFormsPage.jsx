@@ -10,10 +10,9 @@ import { Link } from "react-router-dom";
 
 function UserViewFormsPage(){
   const [results, setResults] = useState([]);
-  const data = [
-    { id: 1, name: 'John Doe', age: 30, city: 'New York' },
-    { id: 2, name: 'Jane Smith', age: 25, city: 'Los Angeles' },
-    { id: 3, name: 'Peter Jones', age: 40, city: 'Chicago' },
+  var data = [
+    { id: 1, type: "Student form example", status: "completed", actions: "edit"},
+    { id: 2, type: "Faculty form example", status: "incomplete", actions: "edit"},
   ];
 
   const handleSearch = async (searchCriteria) => {
@@ -27,9 +26,9 @@ function UserViewFormsPage(){
 
   const columns = [
     { key: 'id', title: 'ID' },
-    { key: 'name', title: 'Name' },
-    { key: 'age', title: 'Age' },
-    { key: 'city', title: 'City' },
+    { key: 'type', title: 'Form Type' },
+    { key: 'status', title: 'Form Status' },
+    { key: 'actions', title: 'Actions' },
   ];
 
   const formTypes = [
@@ -41,6 +40,14 @@ function UserViewFormsPage(){
     {value: "complete", label:"Complete"},
     {value: "incomplete", label:"Incomplete"}
   ];
+  
+  data = data.map(entry => {
+    return {
+      ...entry, // Copy the original object
+      actions: <a href={`/editform/${entry.id}`}>Edit</a> // Use JSX
+    };
+  })
+  
 
   return (
     <div className="main-page-content">
