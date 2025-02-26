@@ -7,16 +7,17 @@ import FormTemplate from "../../components/Form/FormTemplate.jsx";
 import { use } from "react";
 
 const UserCreateFormPage = () => {
-  const [formTypes, setFormTypes] = useState([{}]);
+  const [formTypes, setFormTypes] = useState([]);
   const [formContents, setFormContents] = useState([]);
-  const [currentType, setCurrentType] = useState("Dropdown button");
+  const [currentType, setCurrentType] = useState("UNKNOWN");
+  const [dropDownText, setDropDownText] = useState("Dropdown button");
 
   //function - API stub to fetch available form types
   const getFormTypes = () => {
     //fetch form types from DB
     const form_types = [
       { name: "Graduation", id: "GR001" },
-      { name: "Credit Petition", id: "" },
+      { name: "Credit Petition", id: "TRN001" },
       { name: "Research Funds Approval", id: "RSF001" },
     ];
     setFormTypes(form_types);
@@ -24,8 +25,11 @@ const UserCreateFormPage = () => {
   };
 
   const handleTypeSelect = (eventKey) => {
-    console.log(eventKey);
-    setCurrentType(eventKey);
+    console.log(formTypes);
+    let id_val = formTypes[eventKey].id;
+    console.log(id_val);
+    setCurrentType(id_val);
+    setDropDownText(formTypes[eventKey].name);
   };
 
   //function - API stub to fetch needed form contents (or, store this from the form type call)
@@ -41,9 +45,6 @@ const UserCreateFormPage = () => {
     <div className="main-page-content">
       <h2>Create Form</h2>
       <p>
-        {currentType} and {currentType.id} and {currentType.name}
-      </p>
-      <p>
         Fill out a new digital form by selecting from the options below. Make
         sure to add your required signees and complete all form contents.
       </p>
@@ -52,14 +53,14 @@ const UserCreateFormPage = () => {
         <div className="inline-container">
           <DropdownButton
             id="dropdown-basic-button"
-            title={currentType}
+            title={dropDownText}
             onSelect={handleTypeSelect}
           >
             {
               /*  This maps each array item to a div adds
                 the style declared above and return it */
               formTypes.map((item, index) => (
-                <Dropdown.Item eventKey={item} key={index}>
+                <Dropdown.Item eventKey={index} key={index}>
                   {item.name} -- {item.id}
                 </Dropdown.Item>
               ))
@@ -70,11 +71,6 @@ const UserCreateFormPage = () => {
       </div>
 
       <p></p>
-      {/* add dropdown here (bootstrap + styling) */}
-      <p>Add signees by name and position: </p>
-      {/* add dropdown here (bootstrap + styling) */}
-      <p>Form contents: </p>
-      {/* add editable table here */}
       <p>Form preview:</p>
       {/* display dynamic form component here */}
       <FormTemplate formTypeId={currentType} />

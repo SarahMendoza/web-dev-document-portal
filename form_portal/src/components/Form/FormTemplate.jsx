@@ -13,7 +13,7 @@ const FormTemplate = ({ formTypeId }) => {
   }, [formTypeId]);
 
   if (!formData) {
-    return <div>Loading...</div>;
+    return <div>Select a form template...</div>;
   }
 
   return (
@@ -23,39 +23,53 @@ const FormTemplate = ({ formTypeId }) => {
         <p>{formData.header.formDescr}</p>
       </div>
       <div className="form-template-applicantInfo">
-        <input
-          type="text"
-          placeholder="First Name"
-          value={formData.applicantInfo.applicantFirstName}
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={formData.applicantInfo.applicantLastName}
-        />
+        <h4>Applicant Information</h4>
+        {Object.keys(formData.applicantInfo).map((key, index) => (
+          <div key={index}>
+            <p>
+              {key + ": "}
+              <input
+                type="text"
+                placeholder={formData.applicantInfo[key]}
+                value={formData.applicantInfo.applicantFirstName}
+              />
+            </p>
+          </div>
+        ))}
       </div>
       <div className="form-template-formContent">
-        <input
-          type="text"
-          placeholder="First Name"
-          value={formData.formContent.firstName}
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={formData.formContent.lastName}
-        />
+        <h4>Form Content</h4>
+        {Object.keys(formData.formContent.info).map((key, index) => (
+          <div key={index}>
+            <p>
+              {formData.formContent.info[key] + ": "}
+              <input
+                type="text"
+                placeholder={formData.formContent.info[key]}
+                value={formData.applicantInfo.applicantFirstName}
+              />
+            </p>
+          </div>
+        ))}
       </div>
-      <Table
-        data={formData.formContent}
-        columns={Object.keys(formData.formContent)}
-      />
-      <div className="form-template-signatures"></div>
-      {Object.keys(formData.signatures.info).map((key, index) => (
-        <div key={index}>
-          <p>{formData.signatures.info[key].title}</p>
-        </div>
-      ))}
+      <div className="form-template-signatures">
+        <h4>Signatures</h4>
+        {Object.keys(formData.signatures.info).map((key, index) => (
+          <div key={index}>
+            <p>{formData.signatures.info[key].title}</p>
+            <input
+              type="text"
+              placeholder="First Name"
+              value={formData.applicantInfo.applicantFirstName}
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={formData.applicantInfo.applicantLastName}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
