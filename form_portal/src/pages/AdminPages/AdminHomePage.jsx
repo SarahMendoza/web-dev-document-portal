@@ -1,5 +1,6 @@
 import React from "react";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AdminHomePage.css";
 import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button.jsx";
@@ -7,16 +8,16 @@ import { useNavigate } from "react-router-dom";
 
 const AdminHomePage = () => {
   const { user, loading } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  if (loading) return <p>Loading user...</p>;
-
-  if (!user) return <p>No user found</p>; // Handle null case
 
   const logOut = (e) => {
     localStorage.clear();
     navigate("/");
   };
+  const navigate = useNavigate();
+
+  if (loading) return <p>Loading user...</p>;
+
+  if (!user) return <p>No user found</p>; // Handle null case
 
   return (
     <div className="main-page-content">
@@ -48,6 +49,7 @@ const AdminHomePage = () => {
           onClick={() => navigate("/set-password")}
         />
         <br /> <br />
+        <Button text="Log Out" onClick={logOut} /> <br /> <br />
         <Button text="Log Out" onClick={logOut} />
       </div>
     </div>
