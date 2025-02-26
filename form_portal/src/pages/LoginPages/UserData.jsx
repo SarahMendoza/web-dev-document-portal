@@ -36,10 +36,10 @@ const userData = [
     isAdmin: 0,
   },
   {
-    username: "SueAdmin",
+    username: "root",
     password: "adminpassword",
     profilePicture: "/logo192.png",
-    name: "Sue Admin",
+    name: "root",
     level: "3",
     creation_date: "1-1-1969",
     isAdmin: 1,

@@ -9,7 +9,8 @@ import Button from "../../components/Button";
 
 const UserCreateFormPage = () => {
   const [formTypes, setFormTypes] = useState([]);
-  const [formContents, setFormContents] = useState([]);
+  const [formData, setFormData] = useState({});
+
   const [currentType, setCurrentType] = useState("PLEASE SELECT");
   const [dropDownText, setDropDownText] = useState("Dropdown button");
 
@@ -23,6 +24,10 @@ const UserCreateFormPage = () => {
     ];
     setFormTypes(form_types);
     return;
+  };
+
+  const handleFormUpdate = (updatedData) => {
+    setFormData(updatedData);
   };
 
   const handleTypeSelect = (eventKey) => {
@@ -43,8 +48,11 @@ const UserCreateFormPage = () => {
   //function - API stub for submitting form, sending data to DB backend
 
   const handleSubmitForm = () => {
-    //submit form to DB
-
+    if (!isFormComplete()) {
+      alert("Please complete all fields before submitting.");
+      return;
+    }
+    //submit form into db
     alert(
       "Your form has been submitted!\n Form ID: " +
         currentType +
@@ -60,6 +68,29 @@ const UserCreateFormPage = () => {
         currentType +
         localStorage.getItem("username") +
         Date.now()
+    );
+  };
+
+  const isFormComplete = () => {
+    if (!formData) return false;
+
+    // Check applicant info
+    const isApplicantInfoComplete = Object.values(formData.applicantInfo).every(
+      (val) => val.trim() !== ""
+    );
+
+    // Check form content
+    const isFormContentComplete = Object.values(
+      formData.formContent.info
+    ).every((val) => val.trim() !== "");
+
+    // Check signatures
+    const isSignaturesComplete = Object.values(formData.signatures.info).every(
+      (sig) => sig.title.trim() !== ""
+    );
+
+    return (
+      isApplicantInfoComplete && isFormContentComplete && isSignaturesComplete
     );
   };
 
@@ -91,12 +122,12 @@ const UserCreateFormPage = () => {
           <span>Form ID: {currentType}</span>
         </div>
       </div>
-
       <p></p>
       <p>Form preview:</p>
       {/* display dynamic form component here */}
-      <FormTemplate formTypeId={currentType} />
+      <FormTemplate formTypeId={currentType} onFormUpdate={handleFormUpdate} />;
       {/* add "Save Form" button */}
+      <br />
       <Button text="Save Form" onClick={handleSaveForm} />
       <br />
       <Button text="Submit" onClick={handleSubmitForm} />

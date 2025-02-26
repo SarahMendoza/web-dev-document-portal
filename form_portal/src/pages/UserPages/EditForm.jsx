@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 import FormTemplate from "../../components/Form/FormTemplate";
+import Button from "../../components/Button";
 
 const EditForm = (state) => {
   //const { id } = useParams(); // Get entry ID from URL
@@ -15,22 +16,36 @@ const EditForm = (state) => {
   // Placeholder for entry data (fetch from API later)
   const entry = {
     id: 0,
-    name: `Entry`,
+    name: `Sample Form`,
     description: "Some details here...",
+  };
+
+  const handleClick = () => {
+    alert("Button clicked!");
   };
 
   return (
     <div className="main-page-content">
+      <p>Edit or submit your created form</p>
       {/* <h2>Editing Entry {entry.id}</h2>
       <p>Name: {entry.name}</p>
       <p>Description: {entry.description}</p>
       */}
-      <h2>
-        Editing Entry {id} and {formID}
-      </h2>
-      <button>Save Changes</button>
-      <h1>Heading</h1>
+      <h1>Edit Form: {entry.name} </h1>
       <FormTemplate formTypeId={formID} />
+      <div
+        style={{
+          alignSelf: "center",
+          marginRight: "100px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      ></div>
+      <br />
+      <Button text="Save Form" onClick={handleClick} />
+      <br />
+      <Button text="Submit" onClick={handleClick} />
     </div>
   );
 };
