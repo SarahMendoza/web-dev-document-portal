@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import "./AdminHomePage.css";
 import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button.jsx";
-import { useNavigate } from "react-router-dom";
 
 const AdminHomePage = () => {
   const { user, loading } = useContext(UserContext);
