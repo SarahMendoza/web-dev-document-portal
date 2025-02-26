@@ -1,22 +1,4 @@
-<<<<<<< Updated upstream
-import React, { useContext } from "react";
-import "./UserHomePage.css";
-import UserContext from "./../../context/AuthContext.jsx";
 
-const UserHomePage = () => {
-  const { user, login, logout } = useContext(UserContext);
-  return (
-    <div>
-      <div className="about-container">
-        <p>
-          User info: {user.username} and {user.userLevel} and {user.isAdmin}
-        </p>
-        <h1>About Us</h1>
-        <p>
-          This will eventually be the User Home Page! For now it is a landing
-          page or "about page" while we sort out the navigation and basic
-          components.
-=======
 import React from "react";
 import {useContext} from "react";
 import "./UserHomePage.css";
@@ -24,14 +6,17 @@ import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button.jsx";
 
 const UserHomePage = () => {
-  const { user } = useContext(UserContext);
+  const { user, loading } = useContext(UserContext);
+
+  if (loading) return <p>Loading user...</p>; // Avoid rendering before data loads
+
+  if (!user) return <p>No user found</p>; // Handle null case
   return (
     <div>
       <div className="about-container">
         <h1>Welcome</h1>
         <p>
           Here, you can perform actions probably
->>>>>>> Stashed changes
         </p>
         <h2>Your Account</h2>
         <div className="profile-container">

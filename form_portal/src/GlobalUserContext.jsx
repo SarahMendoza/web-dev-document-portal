@@ -21,7 +21,7 @@ export const UserProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  return <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>;
+  return (<UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>);
 };
 
 export default UserContext;
