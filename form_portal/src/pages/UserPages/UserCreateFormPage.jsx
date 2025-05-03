@@ -15,7 +15,6 @@ const UserCreateFormPage = () => {
   const [dropDownText, setDropDownText] = useState("Select Form Type");
 
   const [fieldValues, setFieldValues] = useState({});
-  const [signatureValues, setSignatureValues] = useState({});
 
   // Fetch list of available form templates
   const fetchFormTemplates = async () => {
@@ -40,18 +39,12 @@ const UserCreateFormPage = () => {
       const data = response.data;
       setSelectedTemplate(data);
 
-      // Initialize input states
+      // Initialize field input states
       const initialFields = {};
       data.fieldTemplateList.forEach((field) => {
         initialFields[field.id] = "";
       });
       setFieldValues(initialFields);
-
-      const initialSigs = {};
-      data.signatureTemplateList.forEach((sig) => {
-        initialSigs[sig.id] = "";
-      });
-      setSignatureValues(initialSigs);
 
       setError(null);
     } catch (err) {
@@ -79,29 +72,37 @@ const UserCreateFormPage = () => {
     setFieldValues((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Handle updates to signature inputs
-  const handleSignatureChange = (id, value) => {
-    setSignatureValues((prev) => ({ ...prev, [id]: value }));
-  };
-
   // Check if form is complete before actions
   const isFormComplete = () => {
     if (!selectedTemplate) return false;
-    const allFieldsFilled = Object.values(fieldValues).every((val) => val.trim() !== "");
-    const allSigsFilled = Object.values(signatureValues).every((val) => val.trim() !== "");
-    return allFieldsFilled && allSigsFilled;
+    return Object.values(fieldValues).every((val) => val.trim() !== "");
   };
 
-  const handleSubmitForm = () => {
+  // Submit form data to API
+  const handleSubmitForm = async () => {
     if (!isFormComplete()) {
-      alert("Please complete all fields and signatures before submitting.");
+      alert("Please complete all fields before submitting.");
       return;
     }
-    alert(
-      `Your form has been submitted!\nForm ID: ${currentTemplateId}-${localStorage.getItem("username")}-${Date.now()}`
-    );
+
+    const username = localStorage.getItem("username");
+    const body = Object.entries(fieldValues).map(([fieldTemplateId, data]) => ({
+      fieldTemplateId: Number(fieldTemplateId),
+      form: null,
+      data,
+    }));
+
+    try {
+      await axios.post(`http://localhost:8080/form/new/${username}`, body);
+      alert("Form submitted successfully!");
+      // Optionally reset state or navigate away
+    } catch (err) {
+      console.error("Error submitting form:", err);
+      alert("Failed to submit form. Please try again later.");
+    }
   };
 
+  // Save form locally (unchanged behavior)
   const handleSaveForm = () => {
     alert(
       `Your form has been saved for later!\nForm ID: ${currentTemplateId}-${localStorage.getItem("username")}-${Date.now()}`
@@ -117,7 +118,7 @@ const UserCreateFormPage = () => {
       <h2>Create Form</h2>
       <p>
         Fill out a new digital form by selecting from the options below. Make
-        sure to complete all required fields and signatures.
+        sure to complete all required fields.
       </p>
 
       <div>
@@ -175,14 +176,9 @@ const UserCreateFormPage = () => {
             <h4>Signatures</h4>
             {selectedTemplate.signatureTemplateList.map((sig) => (
               <div key={sig.id} className="signature-row">
-                <label htmlFor={`sig-${sig.id}`}>{sig.title}</label>
-                <input
-                  id={`sig-${sig.id}`}
-                  type="text"
-                  placeholder="Sign here"
-                  value={signatureValues[sig.id] || ""}
-                  onChange={(e) => handleSignatureChange(sig.id, e.target.value)}
-                />
+                <span className="sig-title">
+                  {sig.title} (Level {sig.userLevel})
+                </span>
               </div>
             ))}
           </div>
