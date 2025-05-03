@@ -1,22 +1,23 @@
-// user page to create a new form, with save or submit options
 import "./UserCreateFormPage.css";
 import React, { useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import FormTemplate from "../../components/Form/FormTemplate.jsx";
 import Button from "../../components/Button";
 import axios from "axios";
 
 const UserCreateFormPage = () => {
   const [formTemplates, setFormTemplates] = useState([]);
-  const [formData, setFormData] = useState({});
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [currentTemplateId, setCurrentTemplateId] = useState("PLEASE SELECT");
   const [dropDownText, setDropDownText] = useState("Select Form Type");
 
-  // Function to fetch available form templates from the API
+  const [fieldValues, setFieldValues] = useState({});
+  const [signatureValues, setSignatureValues] = useState({});
+
+  // Fetch list of available form templates
   const fetchFormTemplates = async () => {
     setIsLoading(true);
     try {
@@ -31,56 +32,82 @@ const UserCreateFormPage = () => {
     }
   };
 
-  // Handle form data updates from child component
-  const handleFormUpdate = (updatedData) => {
-    setFormData(updatedData);
+  // Fetch details for a specific template
+  const fetchTemplateDetails = async (templateId) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:8080/template/${templateId}`);
+      const data = response.data;
+      setSelectedTemplate(data);
+
+      // Initialize input states
+      const initialFields = {};
+      data.fieldTemplateList.forEach((field) => {
+        initialFields[field.id] = "";
+      });
+      setFieldValues(initialFields);
+
+      const initialSigs = {};
+      data.signatureTemplateList.forEach((sig) => {
+        initialSigs[sig.id] = "";
+      });
+      setSignatureValues(initialSigs);
+
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching template details:", err);
+      setError("Failed to load template details. Please try again later.");
+      setSelectedTemplate(null);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Handle template selection from dropdown
+  // Handle dropdown selection
   const handleTemplateSelect = (eventKey) => {
-    const selectedTemplate = formTemplates[eventKey];
-    setCurrentTemplateId(selectedTemplate.formTemplateId);
-    setDropDownText(selectedTemplate.formTitle);
+    const index = Number(eventKey);
+    const template = formTemplates[index];
+    if (template) {
+      setCurrentTemplateId(template.formTemplateId);
+      setDropDownText(template.formTitle);
+      fetchTemplateDetails(template.formTemplateId);
+    }
   };
 
-  // Check if form is complete before submission
+  // Handle updates to field inputs
+  const handleFieldChange = (id, value) => {
+    setFieldValues((prev) => ({ ...prev, [id]: value }));
+  };
+
+  // Handle updates to signature inputs
+  const handleSignatureChange = (id, value) => {
+    setSignatureValues((prev) => ({ ...prev, [id]: value }));
+  };
+
+  // Check if form is complete before actions
   const isFormComplete = () => {
-    // This should be implemented based on your form validation requirements
-    return Object.keys(formData).length > 0;
+    if (!selectedTemplate) return false;
+    const allFieldsFilled = Object.values(fieldValues).every((val) => val.trim() !== "");
+    const allSigsFilled = Object.values(signatureValues).every((val) => val.trim() !== "");
+    return allFieldsFilled && allSigsFilled;
   };
 
-  // Handle form submission
   const handleSubmitForm = () => {
     if (!isFormComplete()) {
-      alert("Please complete all fields before submitting.");
+      alert("Please complete all fields and signatures before submitting.");
       return;
     }
-    
-    // In a real implementation, you would send the form data to your backend
-    // For now, just show an alert with form details
     alert(
-      "Your form has been submitted!\nForm ID: " +
-        currentTemplateId +
-        "-" +
-        localStorage.getItem("username") +
-        "-" +
-        Date.now()
+      `Your form has been submitted!\nForm ID: ${currentTemplateId}-${localStorage.getItem("username")}-${Date.now()}`
     );
   };
 
-  // Handle saving form for later
   const handleSaveForm = () => {
     alert(
-      "Your form has been saved for later!\nForm ID: " +
-        currentTemplateId +
-        "-" +
-        localStorage.getItem("username") +
-        "-" +
-        Date.now()
+      `Your form has been saved for later!\nForm ID: ${currentTemplateId}-${localStorage.getItem("username")}-${Date.now()}`
     );
   };
 
-  // Fetch form templates when component mounts
   useEffect(() => {
     fetchFormTemplates();
   }, []);
@@ -90,15 +117,15 @@ const UserCreateFormPage = () => {
       <h2>Create Form</h2>
       <p>
         Fill out a new digital form by selecting from the options below. Make
-        sure to add your required signees and complete all form contents.
+        sure to complete all required fields and signatures.
       </p>
-      
+
       <div>
         <p>Select form type:</p>
         <div className="inline-container">
-          {isLoading ? (
+          {isLoading && !selectedTemplate ? (
             <p>Loading form templates...</p>
-          ) : error ? (
+          ) : error && !selectedTemplate ? (
             <div className="error-message">
               {error}
               <button onClick={fetchFormTemplates}>Try Again</button>
@@ -110,8 +137,8 @@ const UserCreateFormPage = () => {
                 title={dropDownText}
                 onSelect={handleTemplateSelect}
               >
-                {formTemplates.map((template, index) => (
-                  <Dropdown.Item eventKey={index} key={index}>
+                {formTemplates.map((template, idx) => (
+                  <Dropdown.Item eventKey={idx} key={idx}>
                     {template.formTitle} -- {template.formTemplateId}
                   </Dropdown.Item>
                 ))}
@@ -121,30 +148,59 @@ const UserCreateFormPage = () => {
           )}
         </div>
       </div>
-      
-      <p></p>
+
       <p>Form preview:</p>
-      
-      {/* Display dynamic form component */}
-      {currentTemplateId !== "PLEASE SELECT" && (
-        <FormTemplate 
-          formTypeId={currentTemplateId} 
-          onFormUpdate={handleFormUpdate} 
-        />
+
+      {selectedTemplate && (
+        <div className="template-display">
+          <h3>{selectedTemplate.formTitle} ({selectedTemplate.formTemplateId})</h3>
+          <p>{selectedTemplate.formHeader}</p>
+
+          <div className="fields-section">
+            <h4>Fields</h4>
+            {selectedTemplate.fieldTemplateList.map((field) => (
+              <div key={field.id} className="field-row">
+                <label htmlFor={`field-${field.id}`}>{field.fieldLabel}</label>
+                <input
+                  id={`field-${field.id}`}
+                  type="text"
+                  value={fieldValues[field.id] || ""}
+                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="signatures-section">
+            <h4>Signatures</h4>
+            {selectedTemplate.signatureTemplateList.map((sig) => (
+              <div key={sig.id} className="signature-row">
+                <label htmlFor={`sig-${sig.id}`}>{sig.title}</label>
+                <input
+                  id={`sig-${sig.id}`}
+                  type="text"
+                  placeholder="Sign here"
+                  value={signatureValues[sig.id] || ""}
+                  onChange={(e) => handleSignatureChange(sig.id, e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="actions">
+            <Button
+              text="Save Form"
+              onClick={handleSaveForm}
+              disabled={!isFormComplete()}
+            />
+            <Button
+              text="Submit"
+              onClick={handleSubmitForm}
+              disabled={!isFormComplete()}
+            />
+          </div>
+        </div>
       )}
-      
-      <br />
-      <Button 
-        text="Save Form" 
-        onClick={handleSaveForm} 
-        disabled={currentTemplateId === "PLEASE SELECT"} 
-      />
-      <br />
-      <Button 
-        text="Submit" 
-        onClick={handleSubmitForm} 
-        disabled={currentTemplateId === "PLEASE SELECT"} 
-      />
     </div>
   );
 };
