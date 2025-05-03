@@ -1,111 +1,116 @@
-// user page to view forms
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "../../components/Table";
 import SearchComponent from "../../components/Search/SearchButton";
 import TextInput from "../../components/Search/TextInput";
 import DropdownInput from "../../components/Search/DropdownInput";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function UserViewFormsPage() {
   const navigate = useNavigate();
-  const [results, setResults] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [forms, setForms] = useState([]);
+  const [filteredForms, setFilteredForms] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState({ type: "", text: "", status: "" });
 
-  var data_created = [
-    {
-      id: 1,
-      formTypeID: "GR001",
-      type: "Student Graduation Form",
-      status: "incomplete",
-      actions: "edit",
-    },
-    {
-      id: 2,
-      formTypeID: "RSF001",
-      type: "Faculty Research Form",
-      status: "incomplete",
-      actions: "edit",
-    },
-  ];
-
-  var data_submitted = [
-    {
-      id: 1,
-      formTypeID: "GR001",
-      type: "Student Graduation Form",
-      status: "completed",
-      actions: "view",
-    },
-    {
-      id: 2,
-      formTypeID: "RSF001",
-      type: "Faculty Research Form",
-      status: "completed",
-      actions: "view",
-    },
-  ];
-
-  const handleSearch = async (searchCriteria) => {
+  // Fetch available form templates for dropdown
+  const fetchFormTemplates = async () => {
     try {
-      console.log(searchCriteria);
-    } catch (error) {
-      console.error("Error:", error);
+      const res = await axios.get("http://localhost:8080/template/all");
+      setTemplates(res.data);
+    } catch (err) {
+      console.error("Failed to load form templates", err);
     }
   };
 
+  // Fetch user forms
+  const fetchUserForms = async () => {
+    try {
+      const username = localStorage.getItem("username");
+      const res = await axios.get(`http://localhost:8080/form/all/${username}`);
+      setForms(res.data);
+      setFilteredForms(res.data);
+    } catch (err) {
+      console.error("Failed to load user forms", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchFormTemplates();
+    fetchUserForms();
+  }, []);
+
+  // Handle search/filter action
+  const handleSearch = ({ type, text, status }) => {
+    setSearchCriteria({ type, text, status });
+    let filtered = [...forms];
+
+    if (type) {
+      filtered = filtered.filter((f) => {
+        const templateId = f.id.split("-")[0];
+        return templateId === type;
+      });
+    }
+    if (text) {
+      filtered = filtered.filter((f) => f.id.toLowerCase().includes(text.toLowerCase()));
+    }
+    if (status) {
+      filtered = filtered.filter((f) => f.formStatus.toLowerCase() === status.toLowerCase());
+    }
+
+    setFilteredForms(filtered);
+  };
+
+  // Prepare dropdown options
+  const formTypeOptions = templates.map((tpl) => ({
+    value: tpl.formTemplateId,
+    label: tpl.formTitle,
+  }));
+
+  const formStatusOptions = [
+    { value: "IN_CIRCULATION", label: "In Circulation" },
+    { value: "APPROVED", label: "Approved" },
+    { value: "REJECTED", label: "Rejected" },
+  ];
+
+  // Split into created vs submitted
+  const createdForms = filteredForms.filter((f) => f.formStatus === "IN_CIRCULATION");
+  const submittedForms = filteredForms.filter((f) => f.formStatus !== "IN_CIRCULATION");
+
+  // Map to table data
+  const mapToTableData = (list, isSubmitted) =>
+    list.map((entry) => {
+      const templateId = entry.id.split("-")[0];
+      const tpl = templates.find((t) => t.formTemplateId === templateId);
+      const typeLabel = tpl ? tpl.formTitle : templateId;
+      return {
+        id: entry.id,
+        type: typeLabel,
+        status:
+          entry.formStatus === "IN_CIRCULATION"
+            ? "In Circulation"
+            : entry.formStatus.charAt(0).toUpperCase() + entry.formStatus.slice(1).toLowerCase(),
+        actions: (
+          <button
+            onClick={() =>
+              navigate(isSubmitted ? "/preview-form" : "/editform", {
+                state: { id: entry.id, formID: templateId },
+                replace: false,
+              })
+            }
+          >
+            {isSubmitted ? "View" : "Edit"}
+          </button>
+        ),
+      };
+    });
+
   const columns = [
-    { key: "id", title: "ID" },
+    { key: "id", title: "Form ID" },
     { key: "type", title: "Form Type" },
     { key: "status", title: "Form Status" },
     { key: "actions", title: "Actions" },
   ];
-
-  const formTypes = [
-    { value: "stuexample", label: "Student form example" },
-    { value: "facexample", label: "Faculty form example" },
-  ];
-
-  const formStatuses = [
-    { value: "complete", label: "Complete" },
-    { value: "incomplete", label: "Incomplete" },
-  ];
-
-  data_created = data_created.map((entry) => {
-    return {
-      ...entry, // Copy the original object
-      actions: (
-        <button
-          onClick={() =>
-            navigate("/editform", {
-              state: { id: entry.id, formID: entry.formTypeID },
-              replace: false, // Ensure state persists
-            })
-          }
-        >
-          {entry.status === "completed" ? "View" : "Edit"}
-        </button>
-      ),
-    };
-  });
-
-  data_submitted = data_submitted.map((entry) => {
-    return {
-      ...entry, // Copy the original object
-      actions: (
-        <button
-          onClick={() =>
-            navigate("/preview-form", {
-              state: { id: entry.id, formID: entry.formTypeID },
-              replace: false, // Ensure state persists
-            })
-          }
-        >
-          {entry.status === "completed" ? "View" : "Edit"}
-        </button>
-      ),
-    };
-  });
 
   return (
     <div className="main-page-content">
@@ -114,26 +119,31 @@ function UserViewFormsPage() {
         View, submit, and track the progress of your created forms. Search your
         forms using the fields below.
       </p>
-      <div>
-        <SearchComponent onSearch={handleSearch}>
-          <DropdownInput
-            name="type"
-            options={formTypes}
-            placeholder="Form Type"
-          />
-          <TextInput name="text" placeholder="Form ID" />
-          <DropdownInput
-            name="status"
-            options={formStatuses}
-            placeholder="Form Status"
-          />
-        </SearchComponent>
-      </div>
-      <Table data={data_created} columns={columns} caption="Created forms" />
+
+      <SearchComponent onSearch={handleSearch}>
+        <DropdownInput
+          name="type"
+          options={formTypeOptions}
+          placeholder="Form Type"
+        />
+        <TextInput name="text" placeholder="Form ID" />
+        <DropdownInput
+          name="status"
+          options={formStatusOptions}
+          placeholder="Form Status"
+        />
+      </SearchComponent>
+
       <Table
-        data={data_submitted}
+        data={mapToTableData(createdForms, false)}
         columns={columns}
-        caption="Submitted forms"
+        caption="Created Forms"
+      />
+
+      <Table
+        data={mapToTableData(submittedForms, true)}
+        columns={columns}
+        caption="Submitted Forms"
       />
     </div>
   );
