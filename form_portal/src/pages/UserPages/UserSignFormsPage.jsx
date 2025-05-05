@@ -1,95 +1,122 @@
-// user page to create a new form, with save or submit options
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Table from "../../components/Table";
-import { Form, Link, useNavigate } from "react-router-dom";
-import Button from "../../components/Button";
-import "../../components/Button.css";
 import SearchComponent from "../../components/Search/SearchButton";
 import TextInput from "../../components/Search/TextInput";
 import DropdownInput from "../../components/Search/DropdownInput";
-import FormDisplay from "../../components/FormDisplay";
-import FormContents from "../../FormContents.jsx";
+import Button from "../../components/Button";
+import axios from "axios";
 
-function UserSignFormsPage() {
+const UserSignFormsPage = () => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate("/user-review-sign");
-  };
+  const [templates, setTemplates] = useState([]);
+  const [forms, setForms] = useState([]);
+  const [filteredForms, setFilteredForms] = useState([]);
 
-  const handleSearch = async (searchCriteria) => {
+  const [searchCriteria, setSearchCriteria] = useState({ type: "", text: "", status: "" });
+
+  // Fetch available form templates
+  const fetchTemplates = async () => {
     try {
-      console.log(searchCriteria);
-    } catch (error) {
-      console.error("Error:", error);
+      const res = await axios.get("http://localhost:8080/template/all");
+      setTemplates(res.data);
+    } catch (err) {
+      console.error("Failed to load form templates", err);
     }
   };
 
-  const data = [
-    {
-      id: 1,
-      type: "Graduation",
-      creator: "Greg Weinrich",
-      actions: <Button text="Review" onClick={handleClick} variant="primary" />,
-    },
-    {
-      id: 2,
-      type: "Graduation",
-      creator: "Sarah Mendoza",
-      actions: <Button text="Review" onClick={handleClick} variant="primary" />,
-    },
-    {
-      id: 3,
-      type: "Credit Petition",
-      creator: "Caleb Patton",
-      actions: <Button text="Review" onClick={handleClick} variant="primary" />,
-    },
+  // Fetch signable forms for current user
+  const fetchSignForms = async () => {
+    try {
+      const username = localStorage.getItem("username");
+      const res = await axios.get(`http://localhost:8080/form/sign/list/${username}`);
+      setForms(res.data);
+      setFilteredForms(res.data);
+    } catch (err) {
+      console.error("Failed to load signable forms", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchTemplates();
+    fetchSignForms();
+  }, []);
+
+  // Handle search/filter
+  const handleSearch = ({ type, text, status }) => {
+    setSearchCriteria({ type, text, status });
+    let filtered = [...forms];
+    if (type) {
+      filtered = filtered.filter(f => f.id.split('-')[0] === type);
+    }
+    if (text) {
+      filtered = filtered.filter(f => f.id.toLowerCase().includes(text.toLowerCase()));
+    }
+    if (status) {
+      filtered = filtered.filter(f => f.formStatus.toLowerCase() === status.toLowerCase());
+    }
+    setFilteredForms(filtered);
+  };
+
+  // Prepare options
+  const formTypeOptions = templates.map(tp => ({ value: tp.formTemplateId, label: tp.formTitle }));
+  const formStatusOptions = [
+    { value: "IN_CIRCULATION", label: "In Circulation" },
+    { value: "APPROVED", label: "Approved" },
+    { value: "REJECTED", label: "Rejected" },
   ];
 
+  // Derive table data
+  const tableData = filteredForms.map(f => {
+    const templateId = f.id.split('-')[0];
+    const tpl = templates.find(t => t.formTemplateId === templateId);
+    const typeLabel = tpl ? tpl.formTitle : templateId;
+
+    const first = f.fieldList.find(fl => fl.fieldTemplate.fieldLabel.toLowerCase().includes('firstname'))?.data || '';
+    const last = f.fieldList.find(fl => fl.fieldTemplate.fieldLabel.toLowerCase().includes('lastname'))?.data || '';
+    const creator = `${first} ${last}`.trim();
+
+    return {
+      id: f.id,
+      type: typeLabel,
+      creator,
+      actions: (
+        <Button
+          text="Review"
+          onClick={() => navigate('/user-review-sign', { state: { id: f.id, formID: templateId } })}
+          variant="primary"
+        />
+      ),
+    };
+  });
+
   const columns = [
-    { key: "id", title: "ID" },
+    { key: "id", title: "Form ID" },
     { key: "type", title: "Form Type" },
     { key: "creator", title: "Created By" },
     { key: "actions", title: "Actions" },
   ];
 
-  const formTypes = [
-    { value: "stuexample", label: "Student form example" },
-    { value: "facexample", label: "Faculty form example" },
-  ];
-
-  const formStatuses = [
-    { value: "complete", label: "Complete" },
-    { value: "incomplete", label: "Incomplete" },
-  ];
-
-
-
   return (
     <div className="main-page-content">
       <h1>Sign Forms</h1>
-      <p>
-        View, submit, and track the progress of your created forms. Search your
-        forms using the fields below.
-      </p>
-      <div>
-        <SearchComponent onSearch={handleSearch}>
-          <DropdownInput
-            name="type"
-            options={formTypes}
-            placeholder="Form Type"
-          />
-          <TextInput name="text" placeholder="Form ID" />
-          <DropdownInput
-            name="status"
-            options={formStatuses}
-            placeholder="Form Status"
-          />
-        </SearchComponent>
-      </div>
-      <Table data={data} columns={columns} />
+      <p>Review forms awaiting your signature. Use the filters to find forms.</p>
 
+      <SearchComponent onSearch={handleSearch}>
+        <DropdownInput name="type" options={formTypeOptions} placeholder="Form Type" />
+        <TextInput name="text" placeholder="Form ID" />
+        <DropdownInput name="status" options={formStatusOptions} placeholder="Form Status" />
+      </SearchComponent>
+
+      {filteredForms.length === 0 ? (
+        <p style={{ marginTop: "2rem", fontStyle: "italic" }}>
+          There are no forms awaiting your signature at this time.
+        </p>
+      ) : (
+        <Table data={tableData} columns={columns} caption="Forms to Sign" />
+      )}
     </div>
   );
-}
+};
 
 export default UserSignFormsPage;
