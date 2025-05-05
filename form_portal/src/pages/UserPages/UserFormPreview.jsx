@@ -1,65 +1,55 @@
-// user page to create a new form, with save or submit options
-import React from "react";
-import Table from '../../components/Table'
-import { Link, useNavigate } from "react-router-dom";
-import Button from "../../components/Button"
-import "../../components/Button.css"
-import "../../components/Form/FormTemplate.css"
-import FormTemplate from "../../components/Form/FormTemplate"
-import FormDisplay from "../../components/FormTemplateDisplay.jsx";
-import FormContents from "../../FormContents.jsx";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import Button from "../../components/Button";
+import FormTemplateDisplay from "../../components/FormTemplateDisplay";
+import FormDisplay from "../../components/FormDisplay";
+//import "./UserFormPreview.css";
 
-function UserFormPreview() {
+const UserFormPreview = () => {
   const navigate = useNavigate();
-  const goBack = () => {
-    navigate('/view-forms')
-  };
-  const handleClick = () => {
-    alert('Button clicked!')
-  };
-  const exampleFormData = new FormContents({
-    title: "Example Form",
-    type: "EX01",
-    description: "This is an example form.",
-    content:
-      "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
-    author: {
-      level: 0,
-      firstname: "John ",
-      lastname: "Doe",
-    },
-    fields: [
-      {
-        name: "school",
-        placeholder: "School here",
-        label: "Please enter your educational institution.",
-      },
-    ],
-    // maybe make a signature object later
-    signatures: [
-      {
-        level: 3,
-        title: "Dean",
-        firstname: "Lana",
-        lastname: "Rey",
-        date: "1-1-1969",
-        signed: false,
-      },
-    ],
-  });
+  const { state } = useLocation();
+  const { id } = state || {};
+
+  const [formData, setFormData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!id) {
+      setError("No form ID provided. Please select a form.");
+      setLoading(false);
+      return;
+    }
+    const fetchForm = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/form/${id}`);
+        setFormData(res.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load form preview.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchForm();
+  }, [id]);
+
+  const goBack = () => navigate('/view-forms');
+
+  if (loading) return <div>Loading form preview...</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div className="main-page-content" style={{ flex: '1' }}> 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-
-        <FormDisplay formContents={exampleFormData} />
-
-      <div style={{ alignSelf: 'center', marginRight: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Button text="Go Back" onClick={goBack} variant="primary"/>
+    <div className="main-page-content user-form-preview">
+      <div className="header">
+        <h1>Form Preview</h1>
+        <Button text="Back" onClick={goBack} variant="secondary" />
       </div>
-    </div>
-    </div>
+      {/* Display template header and PDF */}
+      <FormTemplateDisplay formTemplate={formData.formTemplate} />
+      {/* Display form contents read-only */}
+      <FormDisplay form={formData} editable={false} />
     </div>
   );
 };

@@ -15,166 +15,121 @@ const UserCreateFormPage = () => {
   const [dropDownText, setDropDownText] = useState("Select Form Type");
   const [fieldValues, setFieldValues] = useState({});
 
-  // Fetch list of available form templates
+  useEffect(() => {
+    fetchFormTemplates();
+  }, []);
+
   const fetchFormTemplates = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("http://localhost:8080/template/all");
-      setFormTemplates(response.data);
+      const res = await axios.get("http://localhost:8080/template/all");
+      setFormTemplates(res.data);
       setError(null);
     } catch (err) {
-      console.error("Error fetching form templates:", err);
-      setError("Failed to load form templates. Please try again later.");
+      console.error(err);
+      setError("Failed to load form templates.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Fetch details for a specific template
+  const handleTemplateSelect = (key) => {
+    const idx = Number(key);
+    const tpl = formTemplates[idx];
+    if (!tpl) return;
+    setCurrentTemplateId(tpl.formTemplateId);
+    setDropDownText(tpl.formTitle);
+    fetchTemplateDetails(tpl.formTemplateId);
+  };
+
   const fetchTemplateDetails = async (templateId) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/template/${templateId}`);
-      const data = response.data;
+      const res = await axios.get(`http://localhost:8080/template/${templateId}`);
+      const data = res.data;
       setSelectedTemplate(data);
-
-      // Initialize field input states
-      const initialFields = {};
-      data.fieldTemplateList.forEach((field) => {
-        initialFields[field.id] = "";
-      });
-      setFieldValues(initialFields);
+      // init fields
+      const init = {};
+      data.fieldTemplateList.forEach(f => init[f.id] = "");
+      setFieldValues(init);
       setError(null);
     } catch (err) {
-      console.error("Error fetching template details:", err);
-      setError("Failed to load template details. Please try again later.");
+      console.error(err);
+      setError("Failed to load template details.");
       setSelectedTemplate(null);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle dropdown selection
-  const handleTemplateSelect = (eventKey) => {
-    const index = Number(eventKey);
-    const template = formTemplates[index];
-    if (template) {
-      setCurrentTemplateId(template.formTemplateId);
-      setDropDownText(template.formTitle);
-      fetchTemplateDetails(template.formTemplateId);
+  const handleFieldChange = (id, val) => {
+    setFieldValues(prev => ({ ...prev, [id]: val }));
+  };
+
+  const isFormComplete = () => selectedTemplate && Object.values(fieldValues).every(v => v.trim() !== "");
+
+  const handleSaveForm = async () => {
+    if (!isFormComplete()) { alert("Complete all fields before saving."); return; }
+    const username = localStorage.getItem("username");
+    const body = Object.entries(fieldValues).map(([fid, data]) => ({ fieldTemplateId: Number(fid), form: null, data }));
+    try {
+      const res = await axios.post(`http://localhost:8080/form/new/${username}`, body);
+      alert(`Form saved! ID: ${res.data.id}`);
+    } catch (err) {
+      console.error(err);
+      alert("Error saving form.");
     }
-  };
-
-  // Handle field input changes
-  const handleFieldChange = (id, value) => {
-    setFieldValues((prev) => ({ ...prev, [id]: value }));
-  };
-
-  const isFormComplete = () => {
-    return selectedTemplate
-      ? Object.values(fieldValues).every((val) => val.trim() !== "")
-      : false;
   };
 
   const handleSubmitForm = async () => {
-    if (!isFormComplete()) {
-      alert("Please complete all fields before submitting.");
-      return;
-    }
+    if (!isFormComplete()) { alert("Complete all fields before submitting."); return; }
     const username = localStorage.getItem("username");
-    const body = Object.entries(fieldValues).map(([fieldTemplateId, data]) => ({
-      fieldTemplateId: Number(fieldTemplateId),
-      form: null,
-      data,
-    }));
+    const body = Object.entries(fieldValues).map(([fid, data]) => ({ fieldTemplateId: Number(fid), form: null, data }));
     try {
-      await axios.post(`http://localhost:8080/form/new/${username}`, body);
-      alert("Form submitted successfully!");
+      // create
+      const createRes = await axios.post(`http://localhost:8080/form/new/${username}`, body);
+      const created = createRes.data;
+      // publish
+      await axios.post("http://localhost:8080/form/publish", created, { headers: { "Content-Type": "application/json" } });
+      alert("Form published successfully!");
     } catch (err) {
-      console.error("Error submitting form:", err);
-      alert("Failed to submit form. Please try again later.");
+      console.error(err);
+      alert("Error publishing form.");
     }
   };
-
-  const handleSaveForm = () => {
-    alert(`Your form has been saved for later!\nForm ID: ${currentTemplateId}-${localStorage.getItem(
-      "username"
-    )}-${Date.now()}`);
-  };
-
-  useEffect(() => {
-    fetchFormTemplates();
-  }, []);
 
   return (
     <div className="main-page-content">
       <h2>Create Form</h2>
-      <p>
-        Fill out a new digital form by selecting from the options below. Make sure to complete all required fields.
-      </p>
-
-      <div>
-        <p>Select form type:</p>
-        <div className="inline-container">
-          {isLoading && !selectedTemplate ? (
-            <p>Loading form templates...</p>
-          ) : error && !selectedTemplate ? (
-            <div className="error-message">
-              {error}
-              <button onClick={fetchFormTemplates}>Try Again</button>
-            </div>
-          ) : (
-            <>
-              <DropdownButton id="dropdown-basic-button" title={dropDownText} onSelect={handleTemplateSelect}>
-                {formTemplates.map((template, idx) => (
-                  <Dropdown.Item eventKey={idx} key={idx}>
-                    {template.formTitle} -- {template.formTemplateId}
-                  </Dropdown.Item>
-                ))}
-              </DropdownButton>
-              <span>Form ID: {currentTemplateId}</span>
-            </>
-          )}
-        </div>
+      <p>Select a form template and fill out required fields.</p>
+      <div className="inline-container">
+        {isLoading && !selectedTemplate ? <p>Loading...</p> : error && !selectedTemplate ? (
+          <div className="error-message">{error}<button onClick={fetchFormTemplates}>Retry</button></div>
+        ) : (
+          <>
+            <DropdownButton title={dropDownText} onSelect={handleTemplateSelect} id="dropdown-basic">
+              {formTemplates.map((t, i) => <Dropdown.Item key={i} eventKey={i}>{t.formTitle} -- {t.formTemplateId}</Dropdown.Item>)}
+            </DropdownButton>
+            <span>Form ID: {currentTemplateId}</span>
+          </>
+        )}
       </div>
-
-      <p>Form preview:</p>
 
       {selectedTemplate && (
         <>
-          {/* Reuse FormTemplateDisplay for header and PDF */}
           <FormTemplateDisplay formTemplate={selectedTemplate} />
-
-          {/* Dynamic fields input */}
           <div className="fields-section">
             <h4>Fields</h4>
-            {selectedTemplate.fieldTemplateList.map((field) => (
-              <div key={field.id} className="field-row">
-                <label htmlFor={`field-${field.id}`}>{field.fieldLabel}</label>
-                <input
-                  id={`field-${field.id}`}
-                  type="text"
-                  value={fieldValues[field.id] || ""}
-                  onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                />
+            {selectedTemplate.fieldTemplateList.map(f => (
+              <div key={f.id} className="field-row">
+                <label>{f.fieldLabel}</label>
+                <input type="text" value={fieldValues[f.id]} onChange={e => handleFieldChange(f.id, e.target.value)} />
               </div>
             ))}
           </div>
-
-          <div className="signatures-section">
-            <h4>Signatures</h4>
-            {selectedTemplate.signatureTemplateList.map((sig) => (
-              <div key={sig.id} className="signature-row">
-                <span className="sig-title">
-                  {sig.title} (Level {sig.userLevel})
-                </span>
-              </div>
-            ))}
-          </div>
-
           <div className="actions">
             <Button text="Save Form" onClick={handleSaveForm} disabled={!isFormComplete()} />
-            <Button text="Submit" onClick={handleSubmitForm} disabled={!isFormComplete()} />
+            <Button text="Submit Form" onClick={handleSubmitForm} disabled={!isFormComplete()} />
           </div>
         </>
       )}

@@ -74,8 +74,8 @@ function UserViewFormsPage() {
   ];
 
   // Split into created vs submitted
-  const createdForms = filteredForms.filter((f) => f.formStatus === "IN_CIRCULATION");
-  const submittedForms = filteredForms.filter((f) => f.formStatus !== "IN_CIRCULATION");
+  const createdForms = filteredForms.filter((f) => f.formStatus === "NOT_SUBMITTED");
+  const submittedForms = filteredForms.filter((f) => f.formStatus !== "NOT_SUBMITTED");
 
   // Map to table data
   const mapToTableData = (list, isSubmitted) =>
