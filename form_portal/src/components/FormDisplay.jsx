@@ -25,11 +25,15 @@ const FormDisplay = ({ form, editable = false, onFieldChange }) => {
       <div className="meta-section">
         <h3>Form ID: {id}</h3>
         <p>Owner: {owner.username} ({owner.first_name} {owner.last_name})</p>
+        <p>Title: {owner.title}</p>
+        <p>Level: {owner.user_level}</p>
         <p>Created On: {dateStr}</p>
         <p>Status: {formStatus.replace(/_/g, ' ')}</p>
+        
         {formStatus === 'REJECTED' && (
           <p className="rejection">Rejection Reason: {rejectionExplanation}</p>
         )}
+        <p><b>Signature: {owner.first_name} {owner.last_name}</b></p>
       </div>
 
       <div className="fields-section">
