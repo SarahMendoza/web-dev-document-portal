@@ -87,6 +87,7 @@ function AdminManageUsersPage() {
   return (
     <div className="main-page-content">
       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <h1>Manage Users</h1>
         <Button
           text="Delete Selected User(s)"
           onClick={deleteClick}
