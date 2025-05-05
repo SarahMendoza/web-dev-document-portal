@@ -118,14 +118,19 @@ const AdminCreateTemplatePage = () => {
                 required
               />
               <label>Level:</label>
-              <input
-                type="number"
+              <select
                 value={sig.level}
                 onChange={(e) =>
                   handleSignatureChange(index, "level", e.target.value)
                 }
                 required
-              />
+              >
+                <option value="">Select Level</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
             </div>
           ))}
           <Button text="Add Signature" onClick={handleAddSignature} />
