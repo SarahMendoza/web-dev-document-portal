@@ -1,82 +1,26 @@
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import userData from "./UserData";
+import axios from "axios";
 import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button";
+//import "./SetPasswordPage.css";
 
 const SetPasswordPage = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const username = localStorage.getItem("username");
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const user_info = userData.find(
-      (user_info) => user_info.username === username
-    );
-    if (user_info && user_info.password === password) {
-      setUser({
-        user_info,
-      });
-      if (user_info.isAdmin === 1) {
-        // Change to admin home
-        //!!!
-        navigate("/admin-home");
-        //navigate("/user-sign-forms");
-      } else {
-        navigate("/user-home");
-      }
-      localStorage.setItem("userType", user_info.isAdmin);
-    } else {
-      setError("Incorrect username or password");
-    }
-  };
-
-  const handleSetPassword = (e) => {
-    e.preventDefault();
-
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    if (!validatePassword(newPassword)) {
-      setError("Password is invalid, please match the described format.");
-      return;
-    }
-    localStorage.setItem("userPassword", confirmPassword);
-    /*
-    const user_info = userData.find(
-      (user_info) => user_info.username === user.username
-    );
-    if (user_info && user_info.password === password) {
-      setUser({
-        user_info,
-      });
-      if (user_info.isAdmin === 1) {
-        navigate("/admin-home");
-      } else {
-        navigate("/user-home");
-      }
-      localStorage.setItem("userType", user_info.isAdmin);
-    } else {
-      setError("Incorrect username or password");
-    }
-      */
-  };
-
-  const validatePassword = (password) => {
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[#\$%&]/.test(password);
+  const validatePassword = (pwd) => {
+    const hasUpperCase = /[A-Z]/.test(pwd);
+    const hasLowerCase = /[a-z]/.test(pwd);
+    const hasNumber = /\d/.test(pwd);
+    const hasSpecialChar = /[#\$%&!]/.test(pwd);
     return (
-      password.length >= 6 &&
+      pwd.length >= 6 &&
       hasUpperCase &&
       hasLowerCase &&
       hasNumber &&
@@ -84,43 +28,75 @@ const SetPasswordPage = () => {
     );
   };
 
+  const handleSetPassword = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (!validatePassword(newPassword)) {
+      setError("Password must be at least 6 chars, with uppercase, lowercase, number, and special (#,$,%,&,!).");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `http://localhost:8080/user/${username}/change_password`,
+        newPassword,
+        { headers: { "Content-Type": "text/plain" } }
+      );
+      alert("Password updated successfully.");
+      // redirect based on user role
+      if (user?.is_admin === 1) {
+        navigate("/admin-home");
+      } else {
+        navigate("/user-home");
+      }
+    } catch (err) {
+      console.error("Error updating password:", err);
+      setError("Failed to update password. Please try again.");
+    }
+  };
+
   return (
-    <div className="main-page-content">
-      <h1>Set Password</h1>
-      <p>Account Username: {localStorage.getItem("username")}</p>
-      <p>
-        Password format:
-        <ul>
-          <li>At least 6 characters</li>
-          <li>At least one uppercase letter</li>
-          <li>At least one lowercase letter</li>
-          <li>At least one number</li>
-          <li>At least one special character (#, $, %, &)</li>
-        </ul>
-      </p>
-      <p>Enter your new password below:</p>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label></label>
+    <div className="main-page-content set-password-page">
+      <h1>Set New Password</h1>
+      <p>Account Username: {username}</p>
+      <p>Password requirements:</p>
+      <ul>
+        <li>At least 6 characters</li>
+        <li>One uppercase letter</li>
+        <li>One lowercase letter</li>
+        <li>One number</li>
+        <li>One special character (#, $, %, &, !)</li>
+      </ul>
+
+      <form onSubmit={handleSetPassword} className="password-form">
+        <div className="form-group">
+          <label htmlFor="newPassword">New Password</label>
           <input
-            type="text"
+            id="newPassword"
+            type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="Enter new password"
+            required
           />
         </div>
-        <div>
-          <label></label>
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
           <input
+            id="confirmPassword"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm new password"
+            required
           />
         </div>
-        <Button text="Submit" onClick={handleSetPassword} variant="primary" />
+        {error && <div className="error-message">{error}</div>}
+        <Button text="Submit" onClick={handleSetPassword} disabled={!newPassword || !confirmPassword} />
       </form>
-      {error && <div style={{ color: "red" }}>{error}</div>}
     </div>
   );
 };
