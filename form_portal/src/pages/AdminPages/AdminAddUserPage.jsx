@@ -14,18 +14,20 @@ function AdminCreateUserPage() {
     lastName: "",
     userLevel: "",
     userEmail: "",
+    userTitle: "",
   });
 
   const navigate = useNavigate();
 
   // Handle form submit
   const handleClick = async () => {
-    const { firstName, lastName, userLevel, userEmail } = formData;
+    const { firstName, lastName, userLevel, userEmail, userTitle } = formData;
     if (
       firstName === "" ||
       lastName === "" ||
       userLevel === "" ||
-      userEmail === ""
+      userEmail === "" ||
+      userTitle === ""
     ) {
       alert("Please fill in all fields.");
       return;
@@ -39,6 +41,7 @@ function AdminCreateUserPage() {
         user_level: userLevel === "admin" ? 3 : parseInt(userLevel, 10),
         is_admin: userLevel === "admin" ? 1 : 0,
         is_first_login: 1,
+        title: userTitle,
         email: userEmail,
       },
       password: "password",
@@ -112,6 +115,12 @@ function AdminCreateUserPage() {
           name="userEmail"
           placeholder="User Email"
           value={formData.userEmail}
+        />
+        <h4>User Title</h4>
+        <TextInput
+          name="userTitle"
+          placeholder="User Title"
+          value={formData.userTitle}
         />
       </EnterComponent>
     </div>

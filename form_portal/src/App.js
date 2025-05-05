@@ -83,8 +83,6 @@ const MainLayout = () => {
           path="/admin-view-template"
           element={<AdminViewTemplatePage />}
         />
-        <Route path="/admin-create-form" element={<AdminCreateFormPage />} />
-        <Route path="/admin-home" element={<AdminHomePage />} />
       </Routes>
     </div>
   );
