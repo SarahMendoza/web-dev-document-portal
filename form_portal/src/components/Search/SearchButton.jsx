@@ -17,7 +17,9 @@ const SearchComponent = ({ onSearch, children }) => {
   return (
     <div className="container">
       {React.Children.map(children, (child) =>
-        React.cloneElement(child, { onChange: handleChange })
+        React.cloneElement(child, {
+          onChange: (name, value) => handleChange(name, value),
+        })
       )}
       <button onClick={handleSearch} className="btn btn-primary mt-2">
         Search
