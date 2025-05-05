@@ -18,13 +18,23 @@ function AdminManageUsersPage() {
     navigate("/create-user");
   };
 
-  const deleteClick = () => {
+  const deleteClick = async () => {
     if (selectedUsers.length === 0) {
       alert("Please select at least one user to delete.");
       return;
     }
-    alert(`Deleting users: ${selectedUsers.join(", ")}`);
-    // Add API call to delete users here if needed
+
+    try {
+      for (const username of selectedUsers) {
+        await axios.delete(`http://localhost:8080/user/${username}`);
+      }
+      alert("Selected users deleted successfully!");
+      setSelectedUsers([]); // Clear the selected users
+      fetchUsers(); // Refresh the user list after deletion
+    } catch (err) {
+      console.error("Error deleting users:", err);
+      setError("Failed to delete selected users. Please try again.");
+    }
   };
 
   const handleCheckboxChange = (username, isChecked) => {
@@ -73,24 +83,6 @@ function AdminManageUsersPage() {
   return (
     <div className="main-page-content">
       <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-        <SearchComponent onSearch={(criteria) => console.log(criteria)}>
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-            <TextInput
-              name="userID"
-              placeholder="Search ID"
-              onChange={(name, value) =>
-                console.log(`Changed ${name}: ${value}`)
-              }
-            />
-            <TextInput
-              name="userName"
-              placeholder="Search Name"
-              onChange={(name, value) =>
-                console.log(`Changed ${name}: ${value}`)
-              }
-            />
-          </div>
-        </SearchComponent>
         <Button
           text="Delete Selected User(s)"
           onClick={deleteClick}
