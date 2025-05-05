@@ -5,6 +5,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "../../components/Button";
 import FormTemplateDisplay from "../../components/FormTemplateDisplay";
 import axios from "axios";
+import userData from "../LoginPages/UserData";
 
 const AdminCreateFormPage = () => {
   const [formTemplates, setFormTemplates] = useState([]);
@@ -14,9 +15,14 @@ const AdminCreateFormPage = () => {
   const [currentTemplateId, setCurrentTemplateId] = useState("PLEASE SELECT");
   const [dropDownText, setDropDownText] = useState("Select Form Type");
   const [fieldValues, setFieldValues] = useState({});
+  const [users, setUsers] = useState([]);
+  const [currentUsername, setCurrentUsername] = useState("PLEASE SELECT USER");
+  const [userText, setUserText] = useState("Select User");
+
 
   useEffect(() => {
     fetchFormTemplates();
+    fetchUsernames();
   }, []);
 
   const fetchFormTemplates = async () => {
@@ -33,6 +39,20 @@ const AdminCreateFormPage = () => {
     }
   };
 
+  const fetchUsernames = async () => {
+    setIsLoading(true);
+    try {
+      const res = await axios.get("http://localhost:8080/user/get-all-users");
+      setUsers(res.data);
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load users.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleTemplateSelect = (key) => {
     const idx = Number(key);
     const tpl = formTemplates[idx];
@@ -40,6 +60,14 @@ const AdminCreateFormPage = () => {
     setCurrentTemplateId(tpl.formTemplateId);
     setDropDownText(tpl.formTitle);
     fetchTemplateDetails(tpl.formTemplateId);
+  };
+
+  const handelUserSelect = (key) => {
+    const idx = Number(key);
+    const tpl = userData[idx];
+    if (!tpl) return;
+    setCurrentUsername(tpl.username);
+    setUserText(tpl.username);
   };
 
   const fetchTemplateDetails = async (templateId) => {
@@ -100,7 +128,7 @@ const AdminCreateFormPage = () => {
       alert("Complete all fields before submitting.");
       return;
     }
-    const username = localStorage.getItem("username");
+    const username = currentUsername;
     const body = Object.entries(fieldValues).map(([fid, data]) => ({
       fieldTemplateId: Number(fid),
       form: null,
@@ -150,6 +178,18 @@ const AdminCreateFormPage = () => {
               ))}
             </DropdownButton>
             <span>Form ID: {currentTemplateId}</span>
+            <DropdownButton
+              title={userText}
+              onSelect={handelUserSelect}
+              id="dropdown-user"
+            >
+              {userData.map((t, i) => (
+                <Dropdown.Item key={i} eventKey={i}>
+                  {t.username}
+                </Dropdown.Item>
+              ))}
+            </DropdownButton>
+            <span>User: {currentTemplateId}</span>
           </>
         )}
       </div>
