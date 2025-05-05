@@ -6,6 +6,7 @@ import AdminViewFormsPage from "../../pages/AdminPages/AdminViewFormPage";
 import AdminHomePage from "../../pages/AdminPages/AdminHomePage";
 import AdminManageUsersPage from "../../pages/AdminPages/AdminManageUsersPage";
 import AdminViewTemplatePage from "../../pages/AdminPages/AdminViewTemplatePage";
+import AdminCreateFormPage from "../../pages/AdminPages/AdminCreateFormPage";
 
 export const SidebarData = [
   {
@@ -64,6 +65,13 @@ export const AdminSidebarData = [
     title: "Manage Templates",
     component: AdminViewTemplatePage,
     path: "/admin-manage-templates",
+    user_type: "Admin",
+    cName: "nav-text",
+  },
+  {
+    title: "Create Form",
+    component: AdminCreateFormPage,
+    path: "/admin-create-form",
     user_type: "Admin",
     cName: "nav-text",
   },
