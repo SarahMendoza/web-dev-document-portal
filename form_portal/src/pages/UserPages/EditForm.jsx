@@ -55,7 +55,10 @@ const EditForm = () => {
       }));
       await axios.post(`http://localhost:8080/form/update/${id}`, payload);
       alert("Form saved successfully.");
-      navigate("/view-forms");
+      if(localStorage.getItem("userType"))
+        navigate("/admin-view-forms")
+      else
+        navigate("/view-forms");
     } catch (err) {
       console.error(err);
       alert("Failed to save form.");
@@ -71,7 +74,10 @@ const EditForm = () => {
         { headers: { "Content-Type": "text/plain" } }
       );
       alert("Form submitted successfully.");
-      navigate("/view-forms");
+      if(localStorage.getItem("userType"))
+        navigate("/admin-view-forms")
+      else
+        navigate("/view-forms");
     } catch (err) {
       console.error(err);
       alert("Failed to submit form.");
