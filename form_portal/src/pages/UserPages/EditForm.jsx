@@ -2,138 +2,99 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "../../components/Button";
+import FormTemplateDisplay from "../../components/FormTemplateDisplay";
+import FormDisplay from "../../components/FormDisplay";
 import "./EditForm.css";
 
 const EditForm = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const { id } = state || {};
+  const location = useLocation();
+  const { id } = location.state || {};
 
-  const [fields, setFields] = useState([]);
-  const [formTitle, setFormTitle] = useState("");
-  const [formHeader, setFormHeader] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [formData, setFormData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!id) {
-      setError("Missing form ID. Please navigate from the View Forms page.");
-      setIsLoading(false);
+      setError("Missing form ID. Please navigate from the forms list.");
+      setLoading(false);
       return;
     }
 
     const fetchData = async () => {
       try {
-        // 1. Fetch the form instance
-        const formRes = await axios.get(`http://localhost:8080/form/${id}`);
-        const formData = formRes.data;
-        setFields(formData.fieldList || []);
-
-        // 2. Extract templateId from form id (prefix before dash)
-        const templateId = formData.id.split('-')[0];
-
-        // 3. Fetch the template details
-        const tplRes = await axios.get(`http://localhost:8080/template/${templateId}`);
-        const tplData = tplRes.data;
-        setFormTitle(tplData.formTitle || '');
-        setFormHeader(tplData.formHeader || '');
+        const res = await axios.get(`http://localhost:8080/form/${id}`);
+        setFormData(res.data);
       } catch (err) {
-        console.error("Failed to load form or template:", err);
-        setError("Error loading form data.");
+        console.error(err);
+        setError("Failed to load form data.");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [id]);
 
-  const updateFields = async () => {
-    try {
-      // Send the full field objects (id, fieldTemplate, data)
-      const payload = fields.map(f => ({
-        id: f.id,
-        fieldTemplate: f.fieldTemplate,
-        data: f.data
-
-      }));
-      await axios.post(`http://localhost:8080/form/update/${id}`, payload);
-      
-      
-    } catch (err) {
-      console.error("Error updating form:", err);
-      const errMsg = err.response?.data?.message || err.message;
-      alert(`Failed to update form: ${errMsg}`);
-    }
-  }
-
-  const handleChange = (index, newValue) => {
-    setFields(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], data: newValue };
-      return updated;
-    });
+  const handleFieldChange = (fieldId, value) => {
+    setFormData(prev => ({
+      ...prev,
+      fieldList: prev.fieldList.map(f =>
+        f.fieldTemplate.id === fieldId ? { ...f, data: value } : f
+      ),
+    }));
   };
 
-  const handleSave = () => {
-    updateFields();
-    alert(`Form ${id} saved!`);
-    navigate('/view-forms');
+  const handleSave = async () => {
+    try {
+      const payload = formData.fieldList.map(f => ({
+        id: f.id,
+        fieldTemplate: f.fieldTemplate,
+        data: f.data,
+      }));
+      await axios.post(`http://localhost:8080/form/update/${id}`, payload);
+      alert("Form saved successfully.");
+      navigate("/view-forms");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save form.");
+    }
   };
 
   const handleSubmit = async () => {
-    updateFields();
+    await handleSave();
     try {
-      await axios.post(`http://localhost:8080/form/submit`, id,  {headers: {
-        "Content-Type": "text/plain"
-      }});
-      alert("Form successfully submitted!");
-      navigate('/view-forms');
+      await axios.post(
+        `http://localhost:8080/form/submit`,
+        id,
+        { headers: { "Content-Type": "text/plain" } }
+      );
+      alert("Form submitted successfully.");
+      navigate("/view-forms");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit form.");
     }
-   catch (err) {
-    console.error("Error updating form:", err);
-    const errMsg = err.response?.data?.message || err.message;
-    alert(`Failed to update form: ${errMsg}`);
-  }
-    
   };
 
-  if (isLoading) return <div>Loading form...</div>;
-  if (error) return <div style={{ color: 'red', padding: '1rem' }}>{error}</div>;
+  if (loading) return <div>Loading form...</div>;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="main-page-content">
-      <h1>Edit Form: {formTitle}</h1>
-      <p>{formHeader}</p>
+      {/* Display form template header and PDF */}
+      <FormTemplateDisplay formTemplate={formData.formTemplate} />
 
-      <div className="fields-section">
-        <h4>Fields</h4>
-        {fields.map((fieldObj, idx) => (
-          <div key={fieldObj.id} className="field-row">
-            <label htmlFor={`field-${fieldObj.id}`}>{fieldObj.fieldTemplate.fieldLabel}</label>
-            <input
-              id={`field-${fieldObj.id}`}
-              type="text"
-              value={fieldObj.data || ""}
-              onChange={e => handleChange(idx, e.target.value)}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div className="signatures-section">
-        <h4>Signatures</h4>
-        {fields
-          .filter(f => f.fieldTemplate.fieldLabel.toLowerCase().includes('signature'))
-          .map(sig => (
-            <div key={sig.id} className="signature-row">
-              <span>{sig.fieldTemplate.fieldLabel}: {sig.data}</span>
-            </div>
-          ))}
-      </div>
+      {/* Display form fields and signatures, editable */}
+      <FormDisplay
+        form={formData}
+        editable={true}
+        onFieldChange={handleFieldChange}
+      />
 
       <div className="actions">
-        <Button text="Save Form" onClick={handleSave} />
+        <Button text="Save" onClick={handleSave} />
         <Button text="Submit" onClick={handleSubmit} />
       </div>
     </div>

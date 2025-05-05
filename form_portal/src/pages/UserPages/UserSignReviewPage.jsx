@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Button from "../../components/Button";
 import axios from "axios";
+import Button from "../../components/Button";
+import FormTemplateDisplay from "../../components/FormTemplateDisplay";
+import FormDisplay from "../../components/FormDisplay";
+import TextInput from "../../components/Search/TextInput";
 //import "./UserSignReviewPage.css";
 
 const UserSignReviewPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = location.state || {}; // form ID
+  const { id } = location.state || {};
 
   const [formData, setFormData] = useState(null);
   const [signatureTemplate, setSignatureTemplate] = useState(null);
@@ -26,17 +29,17 @@ const UserSignReviewPage = () => {
 
     const fetchData = async () => {
       try {
-        // 1. Fetch form contents
+        // Fetch form data
         const formRes = await axios.get(`http://localhost:8080/form/${id}`);
         setFormData(formRes.data);
 
-        // 2. Fetch signature template for this user and form id (using POST to send raw body)
-const sigRes = await axios.post(
-  `http://localhost:8080/signature_template/${username}`,
-  id,
-  { headers: { "Content-Type": "text/plain" } }
-);
-setSignatureTemplate(sigRes.data);
+        // Fetch signature template (POST raw id)
+        const sigRes = await axios.post(
+          `http://localhost:8080/signature_template/${username}`,
+          id,
+          { headers: { "Content-Type": "text/plain" } }
+        );
+        setSignatureTemplate(sigRes.data);
       } catch (err) {
         console.error(err);
         setError("Failed to load form or signature requirements.");
@@ -48,7 +51,7 @@ setSignatureTemplate(sigRes.data);
     fetchData();
   }, [id]);
 
-  const goBack = () => navigate('/user-sign-forms');
+  const goBack = () => navigate("/user-sign-forms");
 
   const handleSign = async () => {
     if (!signatureInput.trim()) {
@@ -57,15 +60,14 @@ setSignatureTemplate(sigRes.data);
     }
     const username = localStorage.getItem("username");
     try {
-      const signRes = await axios.post(`http://localhost:8080/form/sign/`, {
+      await axios.post(`http://localhost:8080/form/sign/`, {
         username,
         signature: signatureInput,
         signatureTemplateId: signatureTemplate.id,
-        formId: id
+        formId: id,
       });
-      if(signRes.data === true) { alert("Form signed successfully."); }
-      else { alert("Form signed failed.");}
-      navigate('/user-sign-forms');
+      alert("Form signed successfully.");
+      navigate("/user-sign-forms");
     } catch (err) {
       console.error(err);
       alert("Error signing form.");
@@ -73,9 +75,8 @@ setSignatureTemplate(sigRes.data);
   };
 
   const handleReject = async () => {
-    const explanation = prompt("Please enter rejection explanation:");
+    const explanation = window.prompt("Please enter rejection explanation:");
     if (!explanation) return;
-
     const username = localStorage.getItem("username");
     try {
       await axios.post("http://localhost:8080/form/reject", {
@@ -84,7 +85,7 @@ setSignatureTemplate(sigRes.data);
         rejectionExplanation: explanation,
       });
       alert("Form rejected.");
-      navigate('/user-sign-forms');
+      navigate("/user-sign-forms");
     } catch (err) {
       console.error(err);
       alert("Error rejecting form.");
@@ -101,26 +102,23 @@ setSignatureTemplate(sigRes.data);
         <Button text="Back" onClick={goBack} variant="secondary" />
       </div>
 
-      <div className="form-preview">
-        <h2>{formData.formTemplate.formTitle} ({formData.formTemplate.formTemplateId})</h2>
-        <p>{formData.formTemplate.formHeader}</p>
+      {/* Display header and PDF */}
+      <FormTemplateDisplay formTemplate={formData.formTemplate} />
 
-        <div className="fields-section">
-          {formData.fieldList.map(field => (
-            <div key={field.id} className="field-row">
-              <label>{field.fieldTemplate.fieldLabel}</label>
-              <span>{field.data}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Display full form details */}
+      <FormDisplay form={formData} editable={false} />
 
+      {/* Signature entry */}
       <div className="signature-section">
         <h3>Signature Required</h3>
-        <p>{signatureTemplate.title} (Level {signatureTemplate.userLevel})</p>
+        {signatureTemplate && (
+          <p>{signatureTemplate.title} (Level {signatureTemplate.userLevel})</p>
+        )}
         <input
           type="text"
+          name="signature"
           placeholder="Enter your signature"
+          className="form-control mb-2"
           value={signatureInput}
           onChange={e => setSignatureInput(e.target.value)}
         />

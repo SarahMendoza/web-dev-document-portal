@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "../../components/Button";
+import FormTemplateDisplay from "../../components/FormTemplateDisplay";
 import axios from "axios";
 
 const UserCreateFormPage = () => {
@@ -10,10 +11,8 @@ const UserCreateFormPage = () => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [currentTemplateId, setCurrentTemplateId] = useState("PLEASE SELECT");
   const [dropDownText, setDropDownText] = useState("Select Form Type");
-
   const [fieldValues, setFieldValues] = useState({});
 
   // Fetch list of available form templates
@@ -45,7 +44,6 @@ const UserCreateFormPage = () => {
         initialFields[field.id] = "";
       });
       setFieldValues(initialFields);
-
       setError(null);
     } catch (err) {
       console.error("Error fetching template details:", err);
@@ -67,46 +65,41 @@ const UserCreateFormPage = () => {
     }
   };
 
-  // Handle updates to field inputs
+  // Handle field input changes
   const handleFieldChange = (id, value) => {
     setFieldValues((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Check if form is complete before actions
   const isFormComplete = () => {
-    if (!selectedTemplate) return false;
-    return Object.values(fieldValues).every((val) => val.trim() !== "");
+    return selectedTemplate
+      ? Object.values(fieldValues).every((val) => val.trim() !== "")
+      : false;
   };
 
-  // Submit form data to API
   const handleSubmitForm = async () => {
     if (!isFormComplete()) {
       alert("Please complete all fields before submitting.");
       return;
     }
-
     const username = localStorage.getItem("username");
     const body = Object.entries(fieldValues).map(([fieldTemplateId, data]) => ({
       fieldTemplateId: Number(fieldTemplateId),
       form: null,
       data,
     }));
-
     try {
       await axios.post(`http://localhost:8080/form/new/${username}`, body);
       alert("Form submitted successfully!");
-      // Optionally reset state or navigate away
     } catch (err) {
       console.error("Error submitting form:", err);
       alert("Failed to submit form. Please try again later.");
     }
   };
 
-  // Save form locally (unchanged behavior)
   const handleSaveForm = () => {
-    alert(
-      `Your form has been saved for later!\nForm ID: ${currentTemplateId}-${localStorage.getItem("username")}-${Date.now()}`
-    );
+    alert(`Your form has been saved for later!\nForm ID: ${currentTemplateId}-${localStorage.getItem(
+      "username"
+    )}-${Date.now()}`);
   };
 
   useEffect(() => {
@@ -117,8 +110,7 @@ const UserCreateFormPage = () => {
     <div className="main-page-content">
       <h2>Create Form</h2>
       <p>
-        Fill out a new digital form by selecting from the options below. Make
-        sure to complete all required fields.
+        Fill out a new digital form by selecting from the options below. Make sure to complete all required fields.
       </p>
 
       <div>
@@ -133,11 +125,7 @@ const UserCreateFormPage = () => {
             </div>
           ) : (
             <>
-              <DropdownButton
-                id="dropdown-basic-button"
-                title={dropDownText}
-                onSelect={handleTemplateSelect}
-              >
+              <DropdownButton id="dropdown-basic-button" title={dropDownText} onSelect={handleTemplateSelect}>
                 {formTemplates.map((template, idx) => (
                   <Dropdown.Item eventKey={idx} key={idx}>
                     {template.formTitle} -- {template.formTemplateId}
@@ -153,10 +141,11 @@ const UserCreateFormPage = () => {
       <p>Form preview:</p>
 
       {selectedTemplate && (
-        <div className="template-display">
-          <h3>{selectedTemplate.formTitle} ({selectedTemplate.formTemplateId})</h3>
-          <p>{selectedTemplate.formHeader}</p>
+        <>
+          {/* Reuse FormTemplateDisplay for header and PDF */}
+          <FormTemplateDisplay formTemplate={selectedTemplate} />
 
+          {/* Dynamic fields input */}
           <div className="fields-section">
             <h4>Fields</h4>
             {selectedTemplate.fieldTemplateList.map((field) => (
@@ -184,18 +173,10 @@ const UserCreateFormPage = () => {
           </div>
 
           <div className="actions">
-            <Button
-              text="Save Form"
-              onClick={handleSaveForm}
-              disabled={!isFormComplete()}
-            />
-            <Button
-              text="Submit"
-              onClick={handleSubmitForm}
-              disabled={!isFormComplete()}
-            />
+            <Button text="Save Form" onClick={handleSaveForm} disabled={!isFormComplete()} />
+            <Button text="Submit" onClick={handleSubmitForm} disabled={!isFormComplete()} />
           </div>
-        </div>
+        </>
       )}
     </div>
   );

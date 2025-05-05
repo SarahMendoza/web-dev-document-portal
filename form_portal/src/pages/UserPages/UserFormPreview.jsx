@@ -6,7 +6,7 @@ import Button from "../../components/Button"
 import "../../components/Button.css"
 import "../../components/Form/FormTemplate.css"
 import FormTemplate from "../../components/Form/FormTemplate"
-import FormDisplay from "../../components/FormDisplay";
+import FormDisplay from "../../components/FormTemplateDisplay.jsx";
 import FormContents from "../../FormContents.jsx";
 
 function UserFormPreview() {
