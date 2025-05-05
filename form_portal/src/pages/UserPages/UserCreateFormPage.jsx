@@ -5,6 +5,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import Button from "../../components/Button";
 import FormTemplateDisplay from "../../components/FormTemplateDisplay";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UserCreateFormPage = () => {
   const [formTemplates, setFormTemplates] = useState([]);
@@ -14,6 +15,7 @@ const UserCreateFormPage = () => {
   const [currentTemplateId, setCurrentTemplateId] = useState("PLEASE SELECT");
   const [dropDownText, setDropDownText] = useState("Select Form Type");
   const [fieldValues, setFieldValues] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFormTemplates();
@@ -75,6 +77,7 @@ const UserCreateFormPage = () => {
     try {
       const res = await axios.post(`http://localhost:8080/form/new/${username}`, body);
       alert(`Form saved! ID: ${res.data.id}`);
+      navigate("/view-forms");
     } catch (err) {
       console.error(err);
       alert("Error saving form.");
@@ -92,6 +95,7 @@ const UserCreateFormPage = () => {
       // publish
       await axios.post("http://localhost:8080/form/publish", created, { headers: { "Content-Type": "application/json" } });
       alert("Form published successfully!");
+      navigate("/view-forms");
     } catch (err) {
       console.error(err);
       alert("Error publishing form.");
