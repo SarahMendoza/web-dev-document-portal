@@ -20,6 +20,7 @@ import LoginPage from "./pages/LoginPages/LoginPage.jsx";
 import UserFormPreview from "./pages/UserPages/UserFormPreview.jsx";
 import SetPasswordPage from "./pages/LoginPages/SetPasswordPage.jsx";
 import AdminCreateUserPage from "./pages/AdminPages/AdminAddUserPage.jsx";
+import AdminCreateTemplatePage from "./pages/AdminPages/AdminCreateTemplatePage.jsx";
 
 function App() {
   return (
@@ -71,6 +72,10 @@ const MainLayout = () => {
         <Route path="/set-password" element={<SetPasswordPage />} />
         <Route path="/create-user" element={<AdminCreateUserPage />} />
         <Route path="/preview-form" element={<UserFormPreview />} />
+        <Route
+          path="/admin-create-template"
+          element={<AdminCreateTemplatePage />}
+        />
       </Routes>
     </div>
   );
