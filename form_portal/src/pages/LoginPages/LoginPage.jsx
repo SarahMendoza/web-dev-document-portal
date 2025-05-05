@@ -50,6 +50,7 @@ const LoginPage = () => {
       localStorage.setItem("userType", userInfo.is_admin);
       localStorage.setItem("email", userInfo.email);
       localStorage.setItem("title", userInfo.title);
+      localStorage.setItem("creationDate", userInfo.creationDate);
 
       // Redirect based on admin flag
       if (userInfo.is_admin === 1) {
