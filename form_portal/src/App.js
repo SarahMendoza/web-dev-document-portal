@@ -21,6 +21,7 @@ import UserFormPreview from "./pages/UserPages/UserFormPreview.jsx";
 import SetPasswordPage from "./pages/LoginPages/SetPasswordPage.jsx";
 import AdminCreateUserPage from "./pages/AdminPages/AdminAddUserPage.jsx";
 import AdminCreateTemplatePage from "./pages/AdminPages/AdminCreateTemplatePage.jsx";
+import AdminViewTemplatePage from "./pages/AdminPages/AdminViewTemplatePage.jsx";
 
 function App() {
   return (
@@ -75,6 +76,10 @@ const MainLayout = () => {
         <Route
           path="/admin-create-template"
           element={<AdminCreateTemplatePage />}
+        />
+        <Route
+          path="/admin-view-template"
+          element={<AdminViewTemplatePage />}
         />
       </Routes>
     </div>

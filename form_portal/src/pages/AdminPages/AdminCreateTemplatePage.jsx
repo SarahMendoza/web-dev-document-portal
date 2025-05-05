@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import Button from "../../components/Button";
 import "./AdminCreateTemplatePage.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminCreateTemplatePage = () => {
   const [formTemplateId, setFormTemplateId] = useState("");
   const [formTitle, setFormTitle] = useState("");
   const [formHeader, setFormHeader] = useState("");
+  const [formContentLink, setFormContentLink] = useState("");
   const [signatureTemplateList, setSignatureTemplateList] = useState([
     { title: "", level: "" },
   ]);
@@ -14,6 +16,7 @@ const AdminCreateTemplatePage = () => {
     { fieldLabel: "" },
   ]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleAddSignature = () => {
     setSignatureTemplateList([
@@ -40,7 +43,7 @@ const AdminCreateTemplatePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formTemplateId || !formTitle || !formHeader) {
+    if (!formTemplateId || !formTitle || !formHeader || !formContentLink) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -49,6 +52,7 @@ const AdminCreateTemplatePage = () => {
       formTemplateId,
       formTitle,
       formHeader,
+      formContentLink,
       signatureTemplateList: signatureTemplateList.map((sig) => ({
         title: sig.title,
         level: parseInt(sig.level, 10),
@@ -64,6 +68,7 @@ const AdminCreateTemplatePage = () => {
       setFormTemplateId("");
       setFormTitle("");
       setFormHeader("");
+      setFormContentLink("");
       setSignatureTemplateList([{ title: "", level: "" }]);
       setFieldTemplateList([{ fieldLabel: "" }]);
       setError("");
@@ -71,6 +76,8 @@ const AdminCreateTemplatePage = () => {
       console.error("Error creating template:", err);
       setError("Failed to create template. Please try again.");
     }
+    // navigate back to admin view template page
+    navigate("/admin-view-template");
   };
 
   return (
@@ -105,6 +112,15 @@ const AdminCreateTemplatePage = () => {
           />
         </div>
         <div>
+          <label>Form Content Link (PDF URL):</label>
+          <input
+            type="url"
+            value={formContentLink}
+            onChange={(e) => setFormContentLink(e.target.value)}
+            required
+          />
+        </div>
+        <div>
           <h3>Signatures</h3>
           {signatureTemplateList.map((sig, index) => (
             <div key={index}>
@@ -118,14 +134,19 @@ const AdminCreateTemplatePage = () => {
                 required
               />
               <label>Level:</label>
-              <input
-                type="number"
+              <select
                 value={sig.level}
                 onChange={(e) =>
                   handleSignatureChange(index, "level", e.target.value)
                 }
                 required
-              />
+              >
+                <option value="">Select Level</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
             </div>
           ))}
           <Button text="Add Signature" onClick={handleAddSignature} />
