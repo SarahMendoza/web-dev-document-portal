@@ -41,7 +41,8 @@ const AdminCreateFormPage = () => {
   const fetchUsernames = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("http://localhost:8080/user/get-all-users");
+      const res = await axios.get("http://localhost:8080/user/all");
+      console.log(res.data);
       setUsers(res.data);
       setError(null);
     } catch (err) {
@@ -182,7 +183,7 @@ const AdminCreateFormPage = () => {
               onSelect={handelUserSelect}
               id="dropdown-user"
             >
-              {userData.map((t, i) => (
+              {users.map((t, i) => (
                 <Dropdown.Item key={i} eventKey={i}>
                   {t.username}
                 </Dropdown.Item>
