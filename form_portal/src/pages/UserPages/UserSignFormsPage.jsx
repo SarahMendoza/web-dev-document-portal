@@ -72,8 +72,8 @@ const UserSignFormsPage = () => {
     const tpl = templates.find(t => t.formTemplateId === templateId);
     const typeLabel = tpl ? tpl.formTitle : templateId;
 
-    const first = f.fieldList.find(fl => fl.fieldTemplate.fieldLabel.toLowerCase().includes('firstname'))?.data || '';
-    const last = f.fieldList.find(fl => fl.fieldTemplate.fieldLabel.toLowerCase().includes('lastname'))?.data || '';
+    const first = f.owner.first_name;
+    const last = f.owner.last_name;
     const creator = `${first} ${last}`.trim();
 
     return {
