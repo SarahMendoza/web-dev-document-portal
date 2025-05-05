@@ -22,6 +22,7 @@ import SetPasswordPage from "./pages/LoginPages/SetPasswordPage.jsx";
 import AdminCreateUserPage from "./pages/AdminPages/AdminAddUserPage.jsx";
 import AdminCreateTemplatePage from "./pages/AdminPages/AdminCreateTemplatePage.jsx";
 import AdminViewTemplatePage from "./pages/AdminPages/AdminViewTemplatePage.jsx";
+import AdminHomePage from "./pages/AdminPages/AdminHomePage.jsx";
 
 function App() {
   return (
@@ -81,6 +82,7 @@ const MainLayout = () => {
           path="/admin-view-template"
           element={<AdminViewTemplatePage />}
         />
+        <Route path="/admin-home" element={<AdminHomePage/>}/>
       </Routes>
     </div>
   );
