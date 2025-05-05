@@ -5,7 +5,7 @@ import UserSignFormsPage from "../../pages/UserPages/UserSignFormsPage";
 import AdminViewFormsPage from "../../pages/AdminPages/AdminViewFormPage";
 import AdminHomePage from "../../pages/AdminPages/AdminHomePage";
 import AdminManageUsersPage from "../../pages/AdminPages/AdminManageUsersPage";
-import AdminCreateTemplatePage from "../../pages/AdminPages/AdminCreateTemplatePage";
+import AdminViewTemplatePage from "../../pages/AdminPages/AdminViewTemplatePage";
 
 export const SidebarData = [
   {
@@ -62,7 +62,7 @@ export const AdminSidebarData = [
   },
   {
     title: "Manage Templates",
-    component: AdminCreateTemplatePage,
+    component: AdminViewTemplatePage,
     path: "/admin-manage-templates",
     user_type: "Admin",
     cName: "nav-text",
