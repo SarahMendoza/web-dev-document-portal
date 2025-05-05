@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./UserHomePage.css";
 import UserContext from "../../GlobalUserContext";
 import Button from "../../components/Button.jsx";
-import FormDisplay from "../../components/FormTemplateDisplay.jsx"
 
 const UserHomePage = () => {
   const { user, loading } = useContext(UserContext);
@@ -59,7 +58,6 @@ const UserHomePage = () => {
   return (
     <div className="main-page-content">
       <div className="about-container">
-        <FormDisplay/>
         <h1>Welcome, {localStorage.getItem("userFullName")}</h1>
         <p>Here, you can perform actions probably</p>
         <h2>Your Account</h2>
@@ -89,7 +87,6 @@ const UserHomePage = () => {
         <br /> <br />
         <Button text="Log Out" onClick={logOut} />
         <br /> <br />
-        <Button text="Fetch Form Data" onClick={fetchApiData} />
         
         {isLoading && <p>Loading data...</p>}
         
