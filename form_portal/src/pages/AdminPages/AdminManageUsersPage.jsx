@@ -18,6 +18,10 @@ function AdminManageUsersPage() {
     navigate("/create-user");
   };
 
+  const handleClickAdmin = () => {
+    navigate("/admin-create-admin");
+  };
+
   const deleteClick = async () => {
     if (selectedUsers.length === 0) {
       alert("Please select at least one user to delete.");
@@ -89,6 +93,11 @@ function AdminManageUsersPage() {
           variant="primary"
         />
         <Button text="Create User" onClick={handleClick} variant="primary" />
+        <Button
+          text="Create Admin"
+          onClick={handleClickAdmin}
+          variant="primary"
+        />
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <Table data={users} columns={columns} />

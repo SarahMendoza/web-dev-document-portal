@@ -24,6 +24,7 @@ import AdminCreateTemplatePage from "./pages/AdminPages/AdminCreateTemplatePage.
 import AdminViewTemplatePage from "./pages/AdminPages/AdminViewTemplatePage.jsx";
 import AdminHomePage from "./pages/AdminPages/AdminHomePage.jsx";
 import AdminCreateFormPage from "./pages/AdminPages/AdminCreateFormPage.jsx";
+import AdminCreateAdminPage from "./pages/AdminPages/AdminAddAdminPage.jsx";
 
 function App() {
   return (
@@ -83,6 +84,7 @@ const MainLayout = () => {
           path="/admin-view-template"
           element={<AdminViewTemplatePage />}
         />
+        <Route path="/admin-create-admin" element={<AdminCreateAdminPage />} />
       </Routes>
     </div>
   );

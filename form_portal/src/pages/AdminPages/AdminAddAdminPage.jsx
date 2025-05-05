@@ -8,13 +8,13 @@ import Button from "../../components/Button";
 import "../../components/Button.css";
 import EnterComponent from "../../components/Search/EnterButton";
 
-function AdminCreateUserPage() {
+function AdminCreateAdminPage() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    userLevel: "",
+    userLevel: "3",
     userEmail: "",
-    userTitle: "",
+    userTitle: "Admin",
   });
 
   const navigate = useNavigate();
@@ -71,12 +71,6 @@ function AdminCreateUserPage() {
   };
 
   // User levels options for dropdown
-  const userLevels = [
-    { value: "0", label: "0" },
-    { value: "1", label: "1" },
-    { value: "2", label: "2" },
-    { value: "3", label: "3" },
-  ];
 
   useEffect(() => {
     console.log("Updated formData:", formData); // Debugging updated formData
@@ -102,28 +96,15 @@ function AdminCreateUserPage() {
           placeholder="Last Name"
           value={formData.lastName}
         />
-        <h4>User Level</h4>
-        <DropdownInput
-          name="userLevel"
-          options={userLevels}
-          placeholder="User Level"
-          value={formData.userLevel}
-        />
         <h4>User Email</h4>
         <TextInput
           name="userEmail"
           placeholder="User Email"
           value={formData.userEmail}
         />
-        <h4>User Title</h4>
-        <TextInput
-          name="userTitle"
-          placeholder="User Title"
-          value={formData.userTitle}
-        />
       </EnterComponent>
     </div>
   );
 }
 
-export default AdminCreateUserPage;
+export default AdminCreateAdminPage;
