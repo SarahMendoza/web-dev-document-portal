@@ -48,7 +48,7 @@ const AdminViewTemplatePage = () => {
 
     try {
       for (const id of selectedTemplates) {
-        await axios.delete(`http://localhost:8080/template/delete/${id}`);
+        await axios.post(`http://localhost:8080/template/${id}/unpublish`);
       }
       alert("Selected templates deleted successfully!");
       setSelectedTemplates([]);
