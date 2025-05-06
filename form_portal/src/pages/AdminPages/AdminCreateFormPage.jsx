@@ -19,7 +19,6 @@ const AdminCreateFormPage = () => {
   const [currentUsername, setCurrentUsername] = useState("PLEASE SELECT USER");
   const [userText, setUserText] = useState("Select User");
 
-
   useEffect(() => {
     fetchFormTemplates();
     fetchUsernames();
@@ -154,7 +153,7 @@ const AdminCreateFormPage = () => {
 
   return (
     <div className="main-page-content">
-      <h2>Create Form</h2>
+      <h1>Create Form</h1>
       <p>Select a form template and fill out required fields.</p>
       <div className="inline-container">
         {isLoading && !selectedTemplate ? (
