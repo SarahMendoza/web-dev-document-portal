@@ -43,7 +43,6 @@ const AdminCreateFormPage = () => {
     setIsLoading(true);
     try {
       const res = await axios.get("http://localhost:8080/user/all");
-      console.log(res.data);
       setUsers(res.data);
       setError(null);
     } catch (err) {

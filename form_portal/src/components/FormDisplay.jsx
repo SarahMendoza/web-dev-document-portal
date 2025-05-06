@@ -50,7 +50,9 @@ const FormDisplay = ({ form, editable = false, onFieldChange }) => {
     <div className="form-display-container">
       <div className="meta-section">
         <h3>Form ID: {id}</h3>
-        <p>Owner: {owner.username} ({owner.first_name} {owner.last_name})</p>
+        <p>
+          Owner: {owner?.username ?? "Unknown"} ({owner?.first_name ?? "?"} {owner?.last_name ?? "?"})
+        </p>
         <p>Title: {owner.title}</p>
         <p>Level: {owner.user_level}</p>
         <p>Created On: {dateStr}</p>
